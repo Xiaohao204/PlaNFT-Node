@@ -1,0 +1,17 @@
+{
+  "name": "contractserver",
+  "version": "1.0.0",
+  "description": "contract watch ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeremy",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "node-schedule": "^2.0.0",
+    "web3": "^1.6.0"
+  }
+}
