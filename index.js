@@ -3,6 +3,7 @@ const app = express()
 let users = require('./action/user');
 //获取交易记录接口
 let oauth = require('./action/aouth');
+const solidityMoni = require("./action/solidityMonitor");
 
 app.get('/', (req, res) => res.send('welcome to plaNFT!'))
 app.listen(3000, () => console.log('Start Server, listening on port 3000!'))
@@ -25,21 +26,22 @@ var schedule = require('node-schedule');
 var request = require('request');
 var rule = new schedule.RecurrenceRule();
 var times = [0, 10, 20, 30, 40, 50];
-// rule.second = times;//秒
-rule.minute = times;
+rule.second = times;//秒
+// rule.minute = times;
 var monitors = schedule.scheduleJob(rule, function () {
-    //发送统一消息
-    request.get(
-        {
-            url: 'http://localhost:3000/user/joins',
-        },
-        function (error, response, body) {
-            if (response.statusCode != undefined)
-                if (response.statusCode == 200) {
-                    console.log("add contractInfo success！");
-                }
-        }
-    );
+    console.log('startScan at time: ', new Date())
+    solidityMoni.startScan()
+    // request.get(
+    //     {
+    //         url: 'http://localhost:3000/user/joins',
+    //     },
+    //     function (error, response, body) {
+    //         if (response.statusCode != undefined)
+    //             if (response.statusCode == 200) {
+    //                 console.log("add contractInfo success！");
+    //             }
+    //     }
+    // );
 });
 
 // // 引入web库
