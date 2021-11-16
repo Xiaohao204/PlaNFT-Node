@@ -34,7 +34,7 @@ async function actionGetUsers(callback) {
             return callback(err);
         }
         console.log(`result=>`, rows);
-        callback(rows);
+        return callback(rows);
     });
     connection.end();
 }

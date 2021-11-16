@@ -3,16 +3,18 @@
 let getConn = require('../config/dbconn');
 
 // 修改nft的ower信息
-async function actionUpdateNFTInfo(contract_adr, fromAdr, toAdr, tokenId, createTime) {
+async function actionUpdateNFTInfo(contract_adr, toAdr, tokenId) {
     const connection = getConn();
     connection.connect();
-    const query = 'UPDATE nft_info set user_address= ?,updated_at = NOW() where contract_address = ? and token_id =?';
-    const params = [toAdr, contract_adr, tokenId];
-    // const query = `INSERT into transfer (fromAdr,toAdr,tokenId,createTime) Values (?,?,?,NOW())`;
-    // const params = [fromAdr, toAdr, tokenId, createTime];
-    // 执行修改操作
-    connection.query(query, params, function (error, results) {
-        if (error) throw error;
+    var query = 'UPDATE nft_info SET user_address = ?,updated_at = NOW() WHERE contract_address = ? and token_id =?';
+    var params = [toAdr, contract_adr, tokenId];
+    connection.query(query, params, function (err, result) {
+        if (err) {
+            console.log('[UPDATE ERROR] - ', err.message);
+            return;
+        }
+        console.log('----------UPDATE-------------');
+        console.log('UPDATE affectedRows', result.affectedRows);
     });
     connection.end();
 }
@@ -25,6 +27,7 @@ async function actionUpdateSale(contract_adr, toAdr, tokenId) {
     const query = 'update sales_info set user_address = ?, status = 0, sale_method = null, price_starts = null, current_price = null, reserve_price = null, last_traded = now(), updated_at = now() where id = (SELECT sales_id FROM nft_info where contract_address = ? and token_id =?)';
     const params = [toAdr, contract_adr, tokenId];
     connection.query(query, params, function (error, results) {
+        console.log('to: \n tokenId: \n', toAdr, tokenId)
         if (error) throw error;
     });
     connection.end();
@@ -56,7 +59,7 @@ async function actionDelOffer(contract_adr, toAdr, tokenId) {
 }
 
 // 查询NFT的合约返回出去
-async function actionGetNFTInfo(req, res) {
+async function actionGetNFTInfo(callback) {
     const connection = getConn();
     connection.connect();
     // 查询 SQL
@@ -67,8 +70,7 @@ async function actionGetNFTInfo(req, res) {
             return { msg: err };
         }
         // console.log(`result=>`, JSON.stringify(rows));
-        // res.json({ msg: successful, data: JSON.stringify(rows) })
-        return JSON.stringify(rows);
+        callback(rows);
     });
     connection.end();
 }
