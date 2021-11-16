@@ -17,29 +17,23 @@ app.get('/users', (req, res) => {
     });
   });
 
+  //得到合约交易记录信息
+// app.get('/solidity/startScan',solidityMoni.startScan);
 
-//   //得到合约交易记录信息
-// app.get('/oauth/ethercanInfo',oauth.actionEthercanLog);
+const startScan = () => {
+  solidityMoni.startScan()
+}
 
-  //执行定时任务  2021-11-12 
-var schedule = require('node-schedule');
-var request = require('request');
-var rule = new schedule.RecurrenceRule();
-var times = [1,6,11,16,21,26,31,36,41,46,51,56];
-rule.second = times;//秒
-// rule.minute = times;
-var monitors = schedule.scheduleJob(rule, function () {
-    console.log('startScan at time: ', new Date())
-    solidityMoni.startScan()
-    // request.get(
-    //     {
-    //         url: 'http://localhost:3000/user/joins',
-    //     },
-    //     function (error, response, body) {
-    //         if (response.statusCode != undefined)
-    //             if (response.statusCode == 200) {
-    //                 console.log("add contractInfo success！");
-    //             }
-    //     }
-    // );
-});
+startScan();
+
+//   //执行定时任务  2021-11-12 
+// var schedule = require('node-schedule');
+// var request = require('request');
+// var rule = new schedule.RecurrenceRule();
+// var times = [1,6,11,16,21,26,31,36,41,46,51,56];
+// rule.second = times;//秒
+// // rule.minute = times;
+// var monitors = schedule.scheduleJob(rule, function () {
+//     console.log('startScan at time: ', new Date())
+//     solidityMoni.startScan()
+// });

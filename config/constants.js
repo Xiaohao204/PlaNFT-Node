@@ -9,7 +9,6 @@ module.exports = {
             TransferWithIndex: "0x1ff5c586b8a5bb886c69a192872e9ead049f086dc1a3700f1fb667c9f76d3c3d",
         }
     },
-    startNumber: 9628347,
-    max_scan: 5000
+    max_scan: 800
 }
 

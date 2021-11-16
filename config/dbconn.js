@@ -7,10 +7,9 @@ var mysql = require('mysql');
 // const database= 'test';
 
 
-
 const host = '10.0.0.18';
 const user= 'bitoffer_db-test';
-const password= 'BitOffer-test!@#';
+const password= 'BitOffer-test!@#'; 
 const port= '3306';
 const database= 'planft';
 
@@ -24,5 +23,15 @@ function getConn() {
         database: database
     });
 }
+
+// function getConn() {
+//     return mysql.createPool({
+//         host: host,
+//         user: user,
+//         password: password,
+//         port: port,
+//         database: database
+//     });
+// }
 
 module.exports = getConn
