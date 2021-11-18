@@ -12,8 +12,8 @@ function updateBlock(contract_adr, lastScanNumber, endBlockId) {
             if (err) throw err;
             array = rows.changedRows;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 
@@ -32,10 +32,11 @@ function myQuery(contract_adr) {
         const params = [contract_adr];
         connection.query(sql, params, function (err, rows, fields) {
             if (err) throw err;
-            array = rows[0].endBlockId;
+            if (rows.length > 0)
+                array = rows[0].endBlockId;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 

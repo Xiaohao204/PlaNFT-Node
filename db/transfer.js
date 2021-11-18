@@ -11,8 +11,8 @@ function updateNFTInfo(contract_adr, toAdr, tokenId) {
             if (err) throw err;
             array = rows;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 
@@ -32,8 +32,8 @@ function updateSale(contract_adr, toAdr, tokenId) {
             if (err) throw err;
             array = rows;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 
@@ -53,8 +53,8 @@ function delListing(contract_adr, tokenId) {
             if (err) throw err;
             array = rows;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 
@@ -74,8 +74,8 @@ function delOffer(contract_adr, toAdr, tokenId) {
             if (err) throw err;
             array = rows;
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 
@@ -89,7 +89,7 @@ function getNFTInfo() {
     const connection = getConn();
     return new Promise(function (resolve, reject) {
         var array = new Array();;
-        const sql = "SELECT contract_address from nft_info group by contract_address";
+        const sql = "SELECT contract_address from scan_block";
         const params = [];
         connection.query(sql, params, function (err, rows, fields) {
             if (err) throw err;
@@ -99,8 +99,8 @@ function getNFTInfo() {
                 array.push(rows[i].contract_address);
             }
             resolve(array);
-            connection.end();
         });
+        connection.end();
     })
 }
 

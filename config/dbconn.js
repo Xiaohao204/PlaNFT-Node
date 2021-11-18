@@ -24,14 +24,4 @@ function getConn() {
     });
 }
 
-// function getConn() {
-//     return mysql.createPool({
-//         host: host,
-//         user: user,
-//         password: password,
-//         port: port,
-//         database: database
-//     });
-// }
-
 module.exports = getConn

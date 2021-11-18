@@ -2,29 +2,26 @@ const Ethers = require("ethers")
 const erc721_ABI = require("./erc721.json").abi
 const config = require("../config/constants");
 
-// const ZKRandomCoreContract = undefined;
 const PlaTNFT_contract = undefined;
 const provider = undefined;
 const eth = {};
+const contracts = {};
 
 async function connContract(address, abi) {
-    return new Ethers.Contract(address, abi, await eth.getProvider());
+    return contracts[address] === undefined ? new Ethers.Contract(address, abi, await eth.getProvider()) : contracts[address]
 }
 
 eth.getProvider = async function () {
     return provider === undefined ? new Ethers.providers.JsonRpcProvider(config.network) : provider;
 }
 
-// eth.ZKRandomCore_contract = async function () {
-//     return ZKRandomCoreContract === undefined ? connContract(config.eth_contract.ZKRandomCore, ZKRandomCoreABI) : ZKRandomCoreContract;
-// }
-
-eth.Pla_TNFT_contract = async function () {
-    return PlaTNFT_contract === undefined ? connContract(config.eth_contract.Pla_TNFT, erc721_ABI) : PlaTNFT_contract;
-}
-
-eth.other_contract = async function (contract_address) {
-    return connContract(contract_address, erc721_ABI);
+eth.all_contracts = async function (contracts) {
+    const contractList = [];//定义合约数组通过循环获取合约信息集合
+    await Promise.all(contracts.map(async (contract) => {
+        const connContractInfo = await connContract(contract, erc721_ABI);
+        contractList.push(connContractInfo);
+    }));
+    return contractList;
 }
 
 eth.getBlockTime = async function (blockHash) {
