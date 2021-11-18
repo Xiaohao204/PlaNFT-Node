@@ -10,18 +10,16 @@ actionPlaNFT.startScan = async function (contracts) {
 }
 
 async function scanPlaTNFT(target_contracts) {
+    const eventFilter = {
+        topics: [Constants.event_topics.Pla_TNFT.Transfer]
+    }
+    //  获取起始扫描区块
+    const provider = await eth.getProvider();
+    const currentBlockId = await provider.getBlockNumber();
     await Promise.all(target_contracts.map(async (contract) => {
-        const eventFilter = {
-            topics: [Constants.event_topics.Pla_TNFT.Transfer]
-        }
-        //  获取起始扫描区块
-        console.log("this current contract is: " + contract.address);
         const lastScanNumber = await scanblockInfo.actiongetLastScan(contract.address);
-        const provider = await eth.getProvider();
-        const currentBlockId = await provider.getBlockNumber();
         const startBlockId = lastScanNumber + 1;
         const endBlockId = currentBlockId - startBlockId > Constants.max_scan ? startBlockId + Constants.max_scan : currentBlockId;
-        console.log("================scan Pla_TNFT events start %d===========================", startBlockId)
         const scanResult = await contract.queryFilter(eventFilter, startBlockId, endBlockId);
         await Promise.all(scanResult.map(async (value) => {
             const toAdr = value.args['to'];
@@ -33,7 +31,7 @@ async function scanPlaTNFT(target_contracts) {
             await transfer.actionDelOffer(contract_adr, toAdr, tokenId);
         }));
         await scanblockInfo.actionUpdateLastScan(contract.address, lastScanNumber, endBlockId);
-        console.log('startBlockId:%d \n endBlockId:%d \n success count:%d \n', startBlockId, endBlockId, scanResult.length);
+        console.log('contract:%d \n startBlockId:%d \n endBlockId:%d \n success count:%d \n', contract.address,startBlockId, endBlockId, scanResult.length);
     }));
 }
 
