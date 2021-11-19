@@ -16,6 +16,7 @@ async function scanPlaTNFT(target_contracts) {
     //  获取起始扫描区块
     const provider = await eth.getProvider();
     const currentBlockId = await provider.getBlockNumber();
+
     await Promise.all(target_contracts.map(async (contract) => {
         const contractId = contract.address;
         const lastScanNumber = await scanblockInfo.actiongetLastScan(contractId);

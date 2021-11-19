@@ -2,7 +2,6 @@ const Ethers = require("ethers")
 const erc721_ABI = require("./erc721.json").abi
 const config = require("../config/constants");
 
-const PlaTNFT_contract = undefined;
 const provider = undefined;
 const eth = {};
 const contracts = {};
