@@ -17,7 +17,8 @@ async function scanPlaTNFT(target_contracts) {
     const provider = await eth.getProvider();
     const currentBlockId = await provider.getBlockNumber();
     await Promise.all(target_contracts.map(async (contract) => {
-        const lastScanNumber = await scanblockInfo.actiongetLastScan(contract.address);
+        const contractId = contract.address;
+        const lastScanNumber = await scanblockInfo.actiongetLastScan(contractId);
         const startBlockId = lastScanNumber + 1;
         const endBlockId = currentBlockId - startBlockId > Constants.max_scan ? startBlockId + Constants.max_scan : currentBlockId;
         const scanResult = await contract.queryFilter(eventFilter, startBlockId, endBlockId);
@@ -30,8 +31,9 @@ async function scanPlaTNFT(target_contracts) {
             await transfer.actionDelListing(contract_adr, tokenId);
             await transfer.actionDelOffer(contract_adr, toAdr, tokenId);
         }));
-        await scanblockInfo.actionUpdateLastScan(contract.address, lastScanNumber, endBlockId);
-        console.log('contract:%d \n startBlockId:%d \n endBlockId:%d \n success count:%d \n', contract.address,startBlockId, endBlockId, scanResult.length);
+        await scanblockInfo.actionUpdateLastScan(contractId, lastScanNumber, endBlockId);
+        console.log('contractId: ' + contractId);
+        console.log('startBlockId:%d \n endBlockId:%d \n success count:%d \n', startBlockId, endBlockId, scanResult.length);
     }));
 }
 

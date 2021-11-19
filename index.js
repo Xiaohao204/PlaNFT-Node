@@ -25,9 +25,11 @@ app.get('/users', (req, res) => {
 //执行定时任务  2021-11-12 
 const schedule = require('node-schedule');
 async function startScan() {
-  // Scan every six seconds
+  //获取服务器中待扫块的合约地址
   const nftAddress = await transfer.actionGetNFTInfo();
+  //根据合约地址集合拿到合约对象列表
   const contracts = await eth.all_contracts(nftAddress);
+  // Scan every six seconds
   schedule.scheduleJob('*/6 * * * * *', () => {
     console.log('startScan at time: ', new Date())
     try {
