@@ -40,4 +40,23 @@ async function startScan() {
   });
 }
 
+// const startScan = async () => {
+//   // const contracts = await eth.all_contracts();
+//   //获取服务器中待扫块的合约地址
+//   const nftAddress = await transfer.actionGetNFTInfo();
+//   //根据合约地址集合拿到合约对象列表
+//   const contracts = await eth.all_contracts(nftAddress);
+//   let flag = true;
+//   while (flag) {
+//     try {
+//       flag = !flag
+//       console.log('start time: %d', Date.now())
+//       solidityMoni.startScan(contracts);
+//     } catch (error) {
+//       console.log('scanTransfer error: \n', error);
+//       flag = !flag
+//     }
+//   }
+// }
+
 startScan();

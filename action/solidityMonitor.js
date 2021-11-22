@@ -7,7 +7,20 @@ const actionPlaNFT = {}
 
 actionPlaNFT.startScan = async function (contracts) {
     await scanPlaTNFT(contracts);
-}
+};
+
+// actionPlaNFT.startScan = async function (contracts) {
+//     contracts.map(async (contract) => {
+//         contract.on("Transfer", (from, to, tokenId) => {
+//             console.log(tokenId);
+//             console.log('address:%s from:%s to:%s tokenId:%d \n', contract.address, from, to, tokenId.toString());
+//             transfer.actionUpdateNFTInfo(contract.address, to, tokenId.toString());
+//             transfer.actionUpdateSale(contract.address, from, tokenId.toString());
+//             transfer.actionDelListing(contract.address, tokenId.toString());
+//             transfer.actionDelOffer(contract.address, to, tokenId.toString());
+//         });
+//     });
+// }
 
 async function scanPlaTNFT(target_contracts) {
     const eventFilter = {
