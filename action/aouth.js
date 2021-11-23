@@ -8,7 +8,6 @@ var request = require('request');
 const https = require('https')
 
 // exports.ethercanLog = function (req, res) {    //获取ethercan上交易记录信息
-async function actionEthercanLog(req, res, callback) {
 async function getmateData(req, res, callback) {
     request.get(
         {

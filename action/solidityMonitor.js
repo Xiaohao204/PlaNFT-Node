@@ -2,7 +2,8 @@ const eth = require("../contracts/eth");
 const Constants = require('../config/constants');
 let transfer = require('../db/transfer');
 let scanblockInfo = require('../db/scanblock');
-let configs = require('../config/constants');
+let getHttp = require('../config/gethttps');
+
 
 const actionPlaNFT = {}
 
@@ -39,39 +40,42 @@ async function scanPlaTNFT(target_contracts) {
                 const tokenURI = await contract.tokenURI(parseInt(value.args['tokenId']._hex));
                 if (tokenURI != '') {
                     // const url = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-                    const url = tokenURI.replace("ipfs://", "https://dweb.link/ipfs/");
-                    const metadata = null;                    
-                    try {
-                        metadata = await configs.doGetMateData(url);
-                    } catch (e) {
-                        console.log(url + "请求异常: " + e);
-                    }
-                    if (metadata != null) {
+                    const urls = tokenURI.replace("ipfs://", "https://dweb.link/ipfs/");
+                    let metadata = null;
+                    getHttp.getHttpData(urls, async (err, data) => {
+                        console.log('data is :\n', data);
+                        // 返回交易记录
+                        metadata = JSON.parse(data);
                         const userAddress = toAdr;
                         //sales 
                         const type = 3;
                         const status = 0;
                         const collect_num = 0;
                         const viewed_num = 0;
+
                         const sales_id = await transfer.actionInsertSale(userAddress, type, status, collect_num, viewed_num);
 
                         //nftinfo
-                        const jsonObject = jsonObject.parseObject(metadata);
                         const collectionId = 2;
                         const contractName = "";
-                        const description = jsonObject.getString("description");
-                        const properties = jsonObject.getString("attributes");
-                        const image = jsonObject.getString("image");
-                        const image_url = null;
+                        let description = "";
+                        if (metadata.description != undefined)
+                            description = (metadata.description).toString();
+                        // const properties = metadata.attributes;
+                        const properties = "";
+                        if (metadata.attributes != undefined)
+                            attributes = (metadata.attributes).toString();
+                        const image = metadata.image;
+                        let image_url = null;
                         if (image != null)
                             image_url = image.replace("ipfs://", "https://ipfs.io/ipfs/");
-                        const name = jsonObject.getString("name");
-                        const title = name;
+                        let name = metadata.name;
+                        let title = name;
                         if (name == null)
                             title = contractName + "#" + tokenId;
                         const is_frozen = 1;
-                        await transfer.actionNewNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress,description,properties,image_url,title,is_frozen,tokenURI,metadata);
-                    }
+                        await transfer.actionNewNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress, description, properties, image_url, title, is_frozen, tokenURI, data);
+                    })
                 }
             }
         }));

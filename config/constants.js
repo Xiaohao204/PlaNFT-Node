@@ -2,24 +2,25 @@
 const mysql = require('mysql');
 var request = require('request');
 
-const config = {
-    host: 'localhost',
-    user: 'root',
-    password: 'bitoffer123',
-    port: '3306',
-    database: 'test'
-}
-
 // const config = {
-//     host: '10.0.0.18',
-//     user: 'bitoffer_db-test',
-//     password: 'BitOffer-test!@#',
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'bitoffer123',
 //     port: '3306',
-//     database: 'planft'
+//     database: 'test'
 // }
+
+const config = {
+    host: '10.0.0.18',
+    user: 'bitoffer_db-test',
+    password: 'BitOffer-test!@#',
+    port: '3306',
+    database: 'planft'
+}
 const pool = mysql.createPool(config);
 
-const doGetMateData = async (urls) => {
+// const doGetMateData = async (res,urls) => {
+async function doGetMateData(urls,callback) {
     request.get(
         {
             url: urls
@@ -31,12 +32,12 @@ const doGetMateData = async (urls) => {
                     var data = JSON.parse(body);
                     console.log('获取mate元数据信息成功！' + data);
                     // 返回交易记录
-                    res.send(data);
+                    callback(data);
                 } else {
                     console.log(response.statusCode);
                 }
             } catch (error) {
-              console.log(error);
+                console.log(error);
             }
         }
     );
