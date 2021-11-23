@@ -1,12 +1,12 @@
 let configs = require('../config/constants');
 
 //插入nft信息
-function newNFTInfo(contract_adr, toAdr, tokenId) {
+function newNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress,description,properties,image_url,title,is_frozen,tokenURI,metadata) {
     return new Promise(function (resolve, reject) {
         configs.dbpool.getConnection(function (err, connection) {
             var array = 0;
-            var query = 'insert nft_info SET user_address = ?,updated_at = NOW() WHERE contract_address = ? and token_id =?';
-            var params = [toAdr, contract_adr, tokenId];
+            var query = 'insert nft_info (sales_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,title,is_frozen,token_uri,metadata,created_at) Values (?,?,?,?,?,?,?,?,?,?,?,?,NOW())';
+            var params = [sales_id, collectionId, tokenId, contract_adr, userAddress,description,properties,image_url,title,is_frozen,tokenURI,metadata];
             connection.query(query, params, function (err, rows, fields) {
                 if (err) throw err;
                 array = rows;
@@ -17,8 +17,8 @@ function newNFTInfo(contract_adr, toAdr, tokenId) {
     })
 }
 
-const actionNewNFTInfo = async (contract_adr, toAdr, tokenId) => {
-    const array = await newNFTInfo(contract_adr, toAdr, tokenId);
+const actionNewNFTInfo = async (sales_id, collectionId, tokenId, contract_adr, userAddress,description,properties,image_url,title,is_frozen,tokenURI,metadata) => {
+    const array = await newNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress,description,properties,image_url,title,is_frozen,tokenURI,metadata);
     return array;
 }
 
@@ -53,8 +53,18 @@ function insertSale(user_Address,type,status,collect_num,viewed_num) {
             const params = [user_Address,type,status,collect_num,viewed_num];
             connection.query(query, params, function (err, rows, fields) {
                 if (err) throw err;
-                array = rows;
-                resolve(array);
+                // array = rows;
+                // resolve(array);
+                else{
+                    connection.query("SELECT LAST_INSERT_ID();",
+                    function(err,data){
+                        if (err) {
+                            res.status(200).json({ok:0,id:0}).end();
+                        }else{
+                            resolve(data[0]['LAST_INSERT_ID()']);
+                        }
+                    });
+                }
             });
             connection.release();
         })
