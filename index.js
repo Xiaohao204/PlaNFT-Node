@@ -20,7 +20,7 @@ app.get('/users', (req, res) => {
 });
 
 
-app.get('/oauth/getmateData',oauth.getmateData);
+// app.get('/oauth/getmateData',oauth.getmateData);
 
 //得到合约交易记录信息
 // app.get('/solidity/startScan',solidityMoni.startScan);

@@ -1,5 +1,7 @@
 
 const mysql = require('mysql');
+var request = require('request');
+
 // const config = {
 //     host: 'localhost',
 //     user: 'root',
@@ -17,7 +19,8 @@ const config = {
 }
 const pool = mysql.createPool(config);
 
-const doGetMateData = async (urls) => {
+// const doGetMateData = async (res,urls) => {
+async function doGetMateData(urls,callback) {
     request.get(
         {
             url: urls
@@ -29,12 +32,12 @@ const doGetMateData = async (urls) => {
                     var data = JSON.parse(body);
                     console.log('获取mate元数据信息成功！' + data);
                     // 返回交易记录
-                    res.send(data);
+                    callback(data);
                 } else {
                     console.log(response.statusCode);
                 }
             } catch (error) {
-
+                console.log(error);
             }
         }
     );
@@ -55,7 +58,7 @@ module.exports = {
         }
     },
     startNumber: 9650000,
-    max_scan: 2,
+    max_scan: 5,
     dbpool: pool,
     doGetMateData: doGetMateData
 }
