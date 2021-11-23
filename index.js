@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 let users = require('./db/user');
 //获取交易记录接口
-// let oauth = require('./action/aouth');
+let oauth = require('./action/aouth');
 const solidityMoni = require("./action/solidityMonitor");
 const eth = require("./contracts/eth");
 let transfer = require('./db/transfer');
@@ -18,6 +18,9 @@ app.get('/users', (req, res) => {
       .send(rows)
   });
 });
+
+
+app.get('/oauth/getmateData',oauth.getmateData);
 
 //得到合约交易记录信息
 // app.get('/solidity/startScan',solidityMoni.startScan);

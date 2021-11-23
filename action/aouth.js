@@ -8,17 +8,17 @@ var request = require('request');
 const https = require('https')
 
 // exports.ethercanLog = function (req, res) {    //获取ethercan上交易记录信息
-async function actionEthercanLog(req, res, callback) {
-    const address = req.query.address;
-    const pageIndex = parseInt(req.query.pageIndex);
-    const pageSize = parseInt(req.query.pageSize);
-    const sort = req.query.sort;
+async function getmateData(req, res, callback) {
     request.get(
         {
-            url: 'https://jsonplaceholder.typicode.com/todos/1'
+            // url: 'https://jsonplaceholder.typicode.com/todos/1'
+            // url: 'https://dweb.link/ipfs/bafyreifyzpzwt5lvz2d47h3ite7hqzfleke4ctlrdo2r4rcksflw4nsc4e/metadata.json'
+            url: 'https://ipfs.io/ipfs/bafyreifyzpzwt5lvz2d47h3ite7hqzfleke4ctlrdo2r4rcksflw4nsc4e/metadata.json'
             // url: 'http://api.etherscan.io/api?module=account&action=txlist&address=' + address + '&startblock=0&endblock=99999&page=' + pageIndex + '&offset=' + pageSize + '&sort=' + sort + ''
         },
         function (error, response, body) {
+            console.log(response);
+            console.log(body);
             try {
                 if (response.statusCode == 200) {
                     // 第三步：拉取交易记录
@@ -31,18 +31,7 @@ async function actionEthercanLog(req, res, callback) {
                     console.log(response.statusCode);
                 }
             } catch (error) {
-                if (error.code === 'ETIMEDOUT') {
-                    res.json({
-                        successful: false,
-                        msg: error.code,
-                        data: []
-                    });
-                }
-                else
-                    res.json({
-                        successful: false,
-                        data: []
-                    });
+                console.log(error);
             }
         }
     );
@@ -50,5 +39,5 @@ async function actionEthercanLog(req, res, callback) {
 
 
 module.exports = {
-    actionEthercanLog
+    getmateData
 };

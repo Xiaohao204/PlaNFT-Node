@@ -1,5 +1,27 @@
 let configs = require('../config/constants');
 
+//插入nft信息
+function newNFTInfo(contract_adr, toAdr, tokenId) {
+    return new Promise(function (resolve, reject) {
+        configs.dbpool.getConnection(function (err, connection) {
+            var array = 0;
+            var query = 'insert nft_info SET user_address = ?,updated_at = NOW() WHERE contract_address = ? and token_id =?';
+            var params = [toAdr, contract_adr, tokenId];
+            connection.query(query, params, function (err, rows, fields) {
+                if (err) throw err;
+                array = rows;
+                resolve(array);
+            });
+            connection.release();
+        })
+    })
+}
+
+const actionNewNFTInfo = async (contract_adr, toAdr, tokenId) => {
+    const array = await newNFTInfo(contract_adr, toAdr, tokenId);
+    return array;
+}
+
 //修改nft信息
 function updateNFTInfo(contract_adr, toAdr, tokenId) {
     return new Promise(function (resolve, reject) {
@@ -18,9 +40,32 @@ function updateNFTInfo(contract_adr, toAdr, tokenId) {
 }
 
 const actionUpdateNFTInfo = async (contract_adr, toAdr, tokenId) => {
-    var array = await updateNFTInfo(contract_adr, toAdr, tokenId);
+    const array = await updateNFTInfo(contract_adr, toAdr, tokenId);
     return array;
 }
+
+//插入Sale信息
+function insertSale(user_Address,type,status,collect_num,viewed_num) {
+    return new Promise(function (resolve, reject) {
+        configs.dbpool.getConnection(function (err, connection) {
+            var array = 0;
+            const query = 'INSERT into sales_info (user_Address,type,status,collect_num,viewed_num,created_at) Values (?,?,?,?,?,NOW())';
+            const params = [user_Address,type,status,collect_num,viewed_num];
+            connection.query(query, params, function (err, rows, fields) {
+                if (err) throw err;
+                array = rows;
+                resolve(array);
+            });
+            connection.release();
+        })
+    })
+}
+
+const actionInsertSale = async (user_Address,type,status,collect_num,viewed_num) => {
+    const array = await insertSale(user_Address,type,status,collect_num,viewed_num);
+    return array;
+}
+
 
 //修改Sale信息
 function updateSale(contract_adr, toAdr, tokenId) {
@@ -40,7 +85,7 @@ function updateSale(contract_adr, toAdr, tokenId) {
 }
 
 const actionUpdateSale = async (contract_adr, toAdr, tokenId) => {
-    var array = await updateSale(contract_adr, toAdr, tokenId);
+    const array = await updateSale(contract_adr, toAdr, tokenId);
     return array;
 }
 
@@ -62,7 +107,7 @@ function delListing(contract_adr, tokenId) {
 }
 
 const actionDelListing = async (contract_adr, tokenId) => {
-    var array = await delListing(contract_adr, tokenId);
+    const array = await delListing(contract_adr, tokenId);
     return array;
 }
 
@@ -84,7 +129,7 @@ function delOffer(contract_adr, toAdr, tokenId) {
 }
 
 const actionDelOffer = async (contract_adr, toAdr, tokenId) => {
-    var array = await delOffer(contract_adr, toAdr, tokenId);
+    const array = await delOffer(contract_adr, toAdr, tokenId);
     return array;
 }
 
@@ -92,7 +137,7 @@ const actionDelOffer = async (contract_adr, toAdr, tokenId) => {
 function getNFTInfo() {
     return new Promise(function (resolve, reject) {
         configs.dbpool.getConnection(function (err, connection) {
-            var array = new Array();;
+            var array = new Array();
             const sql = "SELECT contract_address from scan_block";
             const params = [];
             connection.query(sql, params, function (err, rows, fields) {
@@ -110,7 +155,30 @@ function getNFTInfo() {
 
 
 const actionGetNFTInfo = async () => {
-    var array = await getNFTInfo();
+    const array = await getNFTInfo();
+    return array;
+}
+
+
+
+// 查询NFT的合约地址信息
+function getNFTCount(contract_adr, tokenId) {
+    return new Promise(function (resolve, reject) {
+        configs.dbpool.getConnection(function (err, connection) {
+            const sql = "SELECT count(1) from nft_info where contract_address = ? and token_id =?";
+            const params = [contract_adr, tokenId];
+            connection.query(sql, params, function (err, rows, fields) {
+                if (err) throw err;       
+                resolve(rows);
+            });
+            connection.release();
+        })
+    })
+}
+
+
+const actionNFTCount = async (contract_adr, tokenId) => {
+    const array = await getNFTCount(contract_adr, tokenId);
     return array;
 }
 
@@ -118,8 +186,11 @@ const actionGetNFTInfo = async () => {
 module.exports = {
     actionGetNFTInfo,
     actionUpdateNFTInfo,
+    actionInsertSale,
     actionUpdateSale,
     actionDelListing,
-    actionDelOffer
+    actionDelOffer,
+    actionNewNFTInfo,
+    actionNFTCount
 };
 
