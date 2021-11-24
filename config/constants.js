@@ -1,21 +1,21 @@
 
 const mysql = require('mysql');
 
-const config = {
-    host: 'localhost',
-    user: 'root',
-    password: 'bitoffer123',
-    port: '3306',
-    database: 'test'
-}
-
 // const config = {
-//     host: '10.0.0.18',
-//     user: 'bitoffer_db-test',
-//     password: 'BitOffer-test!@#',
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'bitoffer123',
 //     port: '3306',
-//     database: 'planft_test'
+//     database: 'test'
 // }
+
+const config = {
+    host: '10.0.0.18',
+    user: 'bitoffer_db-test',
+    password: 'BitOffer-test!@#',
+    port: '3306',
+    database: 'planft'
+}
 const pool = mysql.createPool(config);
 
 module.exports = {
