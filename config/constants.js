@@ -19,8 +19,8 @@ const config = {
 const pool = mysql.createPool(config);
 
 module.exports = {
-    network: "https://rinkeby.infura.io/v3/25b55e1839df4d1b977c62bf7b0f35ab",//xinpeng
-    // network: "https://rinkeby.infura.io/v3/81f13e5096e4405892775775d811e984",//my
+    // network: "https://rinkeby.infura.io/v3/25b55e1839df4d1b977c62bf7b0f35ab",//xinpeng
+    network: "https://rinkeby.infura.io/v3/81f13e5096e4405892775775d811e984",//my
     // network: "https://rinkeby.infura.io/v3/3d1c157ad26247b3bd2b9ae1762b7a05",//simin 
     // network: "http://10.0.0.89:18545",
     eth_contract: {
