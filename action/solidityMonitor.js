@@ -29,54 +29,56 @@ async function scanPlaTNFT(target_contracts, provider) {
             const contract_adr = value.address;
             const tokenId = parseInt(value.args['tokenId']._hex);
             const nftCount = await transfer.actionNFTCount(contract_adr, tokenId);
-            if (nftCount > 0 && currentBlockId > lastScanNumber) {
-                await transfer.actionUpdateNFTInfo(contract_adr, toAdr, tokenId);
-                await transfer.actionUpdateSale(contract_adr, toAdr, tokenId);
-                await transfer.actionDelListing(contract_adr, tokenId);
-                await transfer.actionDelOffer(contract_adr, toAdr, tokenId);
+            if (currentBlockId > lastScanNumber) {
+                if (nftCount > 0) {
+                    await transfer.actionUpdateNFTInfo(contract_adr, toAdr, tokenId);
+                    await transfer.actionUpdateSale(contract_adr, toAdr, tokenId);
+                    await transfer.actionDelListing(contract_adr, tokenId);
+                    await transfer.actionDelOffer(contract_adr, toAdr, tokenId);
+                }
+                // else {
+                //     const tokenURI = await contract.tokenURI(parseInt(value.args['tokenId']._hex));
+                //     if (tokenURI != '') {
+                //         // const url = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+                //         const urls = tokenURI.replace("ipfs://", "https://dweb.link/ipfs/");
+                //         let metadata = null;
+                //         getHttp.getHttpData(urls, async (err, data) => {
+                //             console.log('data is :\n', data);
+                //             // 返回交易记录
+                //             metadata = JSON.parse(data);
+                //             const userAddress = toAdr;
+                //             //sales 
+                //             const type = contractInfo.type;
+                //             const status = 0;
+                //             const collect_num = 0;
+                //             const viewed_num = 0;
+
+                //             const sales_id = await transfer.actionInsertSale(userAddress, type, status, collect_num, viewed_num);
+
+                //             //nftinfo
+                //             const collectionId = contractInfo.collection_id;
+                //             const contractName = contractInfo.contract_name;
+                //             let description = "";
+                //             if (metadata.description != undefined)
+                //                 description = (metadata.description).toString();
+                //             let properties = "";
+
+                //             if (metadata.attributes != undefined)
+                //                 properties = JSON.stringify(metadata.attributes);
+                //             const image = metadata.image;
+                //             let image_url = null;
+                //             if (image != null)
+                //                 image_url = image.replace("ipfs://", "https://ipfs.io/ipfs/");
+                //             let name = metadata.name;
+                //             let title = name;
+                //             if (name == null)
+                //                 title = contractName + "#" + tokenId;
+                //             const is_frozen = 1;
+                //             await transfer.actionNewNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress, description, properties, image_url, title, is_frozen, tokenURI, data);
+                //         })
+                //     }
+                // }
             }
-//             else {
-//                 const tokenURI = await contract.tokenURI(parseInt(value.args['tokenId']._hex));
-//                 if (tokenURI != '') {
-//                     // const url = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-//                     const urls = tokenURI.replace("ipfs://", "https://dweb.link/ipfs/");
-//                     let metadata = null;
-//                     getHttp.getHttpData(urls, async (err, data) => {
-//                         console.log('data is :\n', data);
-//                         // 返回交易记录
-//                         metadata = JSON.parse(data);
-//                         const userAddress = toAdr;
-//                         //sales 
-//                         const type = contractInfo.type;
-//                         const status = 0;
-//                         const collect_num = 0;
-//                         const viewed_num = 0;
-
-//                         const sales_id = await transfer.actionInsertSale(userAddress, type, status, collect_num, viewed_num);
-
-//                         //nftinfo
-//                         const collectionId = contractInfo.collection_id;
-//                         const contractName = contractInfo.contract_name;
-//                         let description = "";
-//                         if (metadata.description != undefined)
-//                             description = (metadata.description).toString();
-//                         let properties = "";
-
-//                         if (metadata.attributes != undefined)
-//                             properties = JSON.stringify(metadata.attributes);
-//                         const image = metadata.image;
-//                         let image_url = null;
-//                         if (image != null)
-//                             image_url = image.replace("ipfs://", "https://ipfs.io/ipfs/");
-//                         let name = metadata.name;
-//                         let title = name;
-//                         if (name == null)
-//                             title = contractName + "#" + tokenId;
-//                         const is_frozen = 1;
-//                         await transfer.actionNewNFTInfo(sales_id, collectionId, tokenId, contract_adr, userAddress, description, properties, image_url, title, is_frozen, tokenURI, data);
-//                     })
-//                 }
-//             }
         }));
         await scanblockInfo.actionUpdateLastScan(contractId, lastScanNumber, endBlockId);
         console.log('contractId: ' + contractId);
