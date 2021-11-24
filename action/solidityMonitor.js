@@ -7,17 +7,14 @@ let getHttp = require('../config/gethttps');
 
 const actionPlaNFT = {}
 
-actionPlaNFT.startScan = async function (contracts) {
-    await scanPlaTNFT(contracts);
+actionPlaNFT.startScan = async function (contracts, currentBlockId) {
+    await scanPlaTNFT(contracts, currentBlockId);
 };
 
-async function scanPlaTNFT(target_contracts) {
+async function scanPlaTNFT(target_contracts, currentBlockId) {
     const eventFilter = {
         topics: [Constants.event_topics.Pla_TNFT.Transfer]
     }
-    //  获取起始扫描区块
-    const provider = await eth.getProvider();
-    const currentBlockId = await provider.getBlockNumber();
 
     await Promise.all(target_contracts.map(async (contract) => {
         const contractId = contract.address;
