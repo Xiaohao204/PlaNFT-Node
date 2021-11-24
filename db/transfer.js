@@ -174,11 +174,11 @@ const actionGetNFTInfo = async () => {
 function getNFTCount(contract_adr, tokenId) {
     return new Promise(function (resolve, reject) {
         configs.dbpool.getConnection(function (err, connection) {
-            const sql = "SELECT count(1) from nft_info where contract_address = ? and token_id =?";
+            const sql = "SELECT count(*) as sumNum from nft_info where contract_address = ? and token_id =?";
             const params = [contract_adr, tokenId];
             connection.query(sql, params, function (err, rows, fields) {
                 if (err) throw err;
-                resolve(rows);
+                resolve(rows[0].sumNum);
             });
             connection.release();
         })
