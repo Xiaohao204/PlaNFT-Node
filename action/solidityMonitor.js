@@ -61,10 +61,10 @@ async function scanPlaTNFT(target_contracts) {
                         let description = "";
                         if (metadata.description != undefined)
                             description = (metadata.description).toString();
-                        // const properties = metadata.attributes;
-                        const properties = "";
+                        let properties = "";
+
                         if (metadata.attributes != undefined)
-                            attributes = (metadata.attributes).toString();
+                            properties = JSON.stringify(metadata.attributes);
                         const image = metadata.image;
                         let image_url = null;
                         if (image != null)

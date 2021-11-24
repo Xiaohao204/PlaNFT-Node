@@ -1,6 +1,5 @@
 
 const mysql = require('mysql');
-var request = require('request');
 
 // const config = {
 //     host: 'localhost',
@@ -15,33 +14,9 @@ const config = {
     user: 'bitoffer_db-test',
     password: 'BitOffer-test!@#',
     port: '3306',
-    database: 'planft'
+    database: 'planft_test'
 }
 const pool = mysql.createPool(config);
-
-// const doGetMateData = async (res,urls) => {
-async function doGetMateData(urls,callback) {
-    request.get(
-        {
-            url: urls
-        },
-        function (error, response, body) {
-            try {
-                if (response.statusCode == 200) {
-                    // 第三步：拉取mate元数据记录
-                    var data = JSON.parse(body);
-                    console.log('获取mate元数据信息成功！' + data);
-                    // 返回交易记录
-                    callback(data);
-                } else {
-                    console.log(response.statusCode);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    );
-};
 
 module.exports = {
     network: "https://rinkeby.infura.io/v3/25b55e1839df4d1b977c62bf7b0f35ab",//xinpeng
@@ -59,7 +34,6 @@ module.exports = {
     },
     startNumber: 9650000,
     max_scan: 5,
-    dbpool: pool,
-    doGetMateData: doGetMateData
+    dbpool: pool
 }
 
