@@ -145,16 +145,17 @@ const actionDelOffer = async (contract_adr, toAdr, tokenId) => {
 function getNFTInfo() {
     return new Promise(function (resolve, reject) {
         configs.dbpool.getConnection(function (err, connection) {
-            var array = new Array();
-            const sql = "SELECT contract_address from scan_block";
+            // var array = new Array();
+            // const sql = "SELECT contract_address from scan_block";
+            const sql = "SELECT collection_id,address,contract_name,type,end_block_id FROM contract_info";
             const params = [];
             connection.query(sql, params, function (err, rows, fields) {
                 if (err) throw err;
-                array = [];
-                for (var i = 0; i < rows.length; i++) {
-                    array.push(rows[i].contract_address);
-                }
-                resolve(array);
+                // array = [];
+                // for (var i = 0; i < rows.length; i++) {
+                //     array.push(rows[i].contract_address);
+                // }
+                resolve(rows);
             });
             connection.release();
         })

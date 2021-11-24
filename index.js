@@ -25,18 +25,21 @@ app.get('/users', (req, res) => {
 const schedule = require('node-schedule');
 async function startScan() {
   //获取服务器中待扫块的合约地址
-  const nftAddress = await transfer.actionGetNFTInfo();
+  const nftAddressList = await transfer.actionGetNFTInfo();
   //根据合约地址集合拿到合约对象列表
-  const contracts = await eth.all_contracts(nftAddress);
+  let array = new Array();
+  for (var i = 0; i < nftAddressList.length; i++) {
+     array.push(nftAddressList[i].address);
+  }
+  const contracts = await eth.all_contracts(array);
 
   //  获取起始扫描区块
   const provider = await eth.getProvider();
-  const currentBlockId = await provider.getBlockNumber();
   // Scan every six seconds
   schedule.scheduleJob('*/6 * * * * *', () => {
     console.log('startScan at time: ', new Date())
     try {
-      solidityMoni.startScan(contracts, currentBlockId);
+      solidityMoni.startScan(contracts, provider);
     } catch (e) {
       console.log('there has some error:\n', e)
     }
