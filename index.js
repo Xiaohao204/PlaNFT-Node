@@ -28,11 +28,15 @@ async function startScan() {
   const nftAddress = await transfer.actionGetNFTInfo();
   //根据合约地址集合拿到合约对象列表
   const contracts = await eth.all_contracts(nftAddress);
+
+  //  获取起始扫描区块
+  const provider = await eth.getProvider();
+  const currentBlockId = await provider.getBlockNumber();
   // Scan every six seconds
   schedule.scheduleJob('*/6 * * * * *', () => {
     console.log('startScan at time: ', new Date())
     try {
-      solidityMoni.startScan(contracts);
+      solidityMoni.startScan(contracts, currentBlockId);
     } catch (e) {
       console.log('there has some error:\n', e)
     }
