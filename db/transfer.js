@@ -53,8 +53,6 @@ function insertSale(user_Address, type, status, collect_num, viewed_num) {
             const params = [user_Address, type, status, collect_num, viewed_num];
             connection.query(query, params, function (err, rows, fields) {
                 if (err) throw err;
-                // array = rows;
-                // resolve(array);
                 else {
                     connection.query("SELECT LAST_INSERT_ID();",
                         function (err, data) {
