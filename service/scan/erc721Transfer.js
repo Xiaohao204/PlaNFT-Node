@@ -40,8 +40,8 @@ async function scanTransfer(contracts, chainBlockNumber) {
                     if (type === 1) {
                         const tokenURI = await contract.tokenURI(tokenId);
                         if (tokenURI !== '') {
-                            // const url = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-                            const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
+                            const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
+                            // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
                             ipfs.getMetaData(url, async (err, data) => {
                                 if (err) throw err;
                                 const saleInfo = {
