@@ -4,6 +4,8 @@ const salesInfo = require('../db/salesInfo');
 const listing = require('../db/listing');
 const offer = require('../db/offer');
 const mysql = require('../../config/mysql');
+const listingExpiration = require('../db/listingExpiration');
+const dutchAuctionSale = require('../db/dutchAuctionSale');
 
 const updateTransaction = function (params) {
     return new Promise(function (resolve, reject) {
@@ -14,6 +16,8 @@ const updateTransaction = function (params) {
                 salesInfo.updateSaleInfo(connection, params);
                 listing.delListing(connection, params);
                 offer.delOffer(connection, params);
+                listingExpiration.delSale(connection, params);
+                dutchAuctionSale.delSale(connection, params);
                 connection.commit();
             } catch (error) {
                 console.log('updateTransaction error:%s \n', error)

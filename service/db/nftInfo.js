@@ -23,35 +23,6 @@ nftInfo.insertNFTInfo = function (connection, params) {
     })
 }
 
-// nftInfo.updateNFTOwner = function (params) {
-//     return new Promise(function (resolve, reject) {
-//         mysql.getConnection(function (err, connection) {
-//             const sql = 'UPDATE nft_info SET user_address = ?,updated_at = NOW() WHERE contract_address = ? and token_id =?';
-//             connection.query(query, [params.toAddr, params.contractAddr, params.tokenId], function (err, result) {
-//                 if (err) throw err;
-//                 console.log('====', result.changedRows === 1)
-//                 resolve(result.changedRows === 1);
-//             });
-//             connection.release();
-//         })
-//     })
-// }
-
-// nftInfo.insertNFTInfo = function (params) {
-//     return new Promise(function (resolve, reject) {
-//         mysql.getConnection(function (err, connection) {
-//             const sql = 'INSERT into nft_info (sales_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,title,is_frozen,token_uri,metadata) Values (?,?,?,?,?,?,?,?,?,?,?,?)';
-//             connection.query(sql, [params.salesId, params.collectionId, params.tokenId, params.contractAddr, params.toAddr,
-//             params.description, params.properties, params.imageUrl, params.title, params.is_frozen, params.tokenURI, params.data], function (err, result) {
-//                 if (err) throw err;
-//                 console.log('insertNFTInfo====', result)
-//                 resolve(result);
-//             });
-//             connection.release();
-//         })
-//     })
-// }
-
 nftInfo.getNFTInfoBlockNumber = async (params) => {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
