@@ -21,7 +21,7 @@ async function scanTransfer(contracts, chainBlockNumber) {
             // calc scan scope
             // const lastScanNumber = await contractInfo.getLastNumber(contractAddr);
             const { end_block_id, collection_id, contract_name, type } = await contractInfo.getContractInfo(contractAddr);
-            const startBlock = end_block_id + 1;
+            const startBlock = end_block_id;
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
             // listening transfer event
