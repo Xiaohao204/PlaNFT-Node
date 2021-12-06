@@ -49,7 +49,8 @@ async function scanTransfer(contracts, chainBlockNumber) {
                                     type,
                                     status: 0,
                                     collectNum: 0,
-                                    viewedNum: 0
+                                    viewedNum: 0,
+                                    is_bundle: 0
                                 }
                                 const metadata = JSON.parse(data);
                                 const nftInfoData = {
