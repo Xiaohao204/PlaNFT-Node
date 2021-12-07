@@ -1,21 +1,39 @@
-// let users = require('./db/user');
 const erc721Transfer = require("./service/scan/erc721Transfer");
+const plaNFtSetTokenURI = require("./service/scan/plaNFtSetTokenURI");
 const eth = require("./utils/eth");
-const contractInfo = require('./service/db/contractInfo');
+const { contractInfo, contractPlatform } = require('./service/db/PlaNFT');
 const schedule = require('node-schedule');
 
 async function startScan() {
-  //获取服务器中待扫块的合约地址
-  let contractList = await contractInfo.getContractList();
+
+  // contract list for transfer scan
+  let transferList = await contractInfo.getTransferList();
+  // contract list for setTokenURI scan
+  let setTokenURIList = await contractPlatform.getSetTokenURIList();
+
   //获取合约实例
-  let contracts = await eth.all_contracts(contractList);
+  let transferContracts = await eth.instanceTransferContracts(transferList);
+  //获取合约实例
+  let setTokenURIContracts = await eth.instanceSetTokenURIContracts(setTokenURIList);
+
   //获取provider
   let provider = await eth.getProvider();
-  // Scan every six seconds
-  schedule.scheduleJob('*/10 * * * * *', async () => {
+
+  // // Scan every ten seconds
+  // schedule.scheduleJob('*/10 * * * * *', async () => {
+  //   try {
+  //     console.log('startScan at time: ', new Date())
+  //     erc721Transfer.startScan(provider, transferContracts);
+  //   } catch (error) {
+  //     console.log('startScan error:%s \n', error)
+  //   }
+  // });
+
+  // Scan every ten seconds
+  schedule.scheduleJob('*/12 * * * * *', async () => {
     try {
       console.log('startScan at time: ', new Date())
-      erc721Transfer.startScan(provider, contracts);
+      plaNFtSetTokenURI.startScan(provider, setTokenURIContracts);
     } catch (error) {
       console.log('startScan error:%s \n', error)
     }
@@ -31,14 +49,18 @@ async function startScan() {
     }
   });
 
-  // update contracts list
-  schedule.scheduleJob('3 */10 * * * *', async () => {
+  // update transferList
+  schedule.scheduleJob('0 * * * * *', async () => {
     try {
-      console.log('update contractList: ', new Date())
-      contractList = await contractInfo.getContractList();
-      contracts = await eth.all_contracts(contractList);
+      console.log('update transferList: ', new Date())
+      transferList = await contractInfo.getTransferList();
+      transferContracts = await eth.instanceTransferContracts(transferList);
+
+      console.log('update transferList: ', new Date())
+      setTokenURIList = await contractPlatform.getSetTokenURIList();
+      setTokenURIContracts = await eth.instanceSetTokenURIContracts(setTokenURIList);
     } catch (error) {
-      console.log('updatecontractList error:%s \n', error)
+      console.log('updateTransferList error:%s \n', error)
     }
   });
 }

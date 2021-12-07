@@ -11,6 +11,7 @@ module.exports = {
     event_topics: {
         ERC721: {
             Transfer: "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            SetTokenURI: "0xd2d827dddfc9c9a02afc5fc68d3251684b36e213a7999ebd90a861f25df4077e"
         }
     },
     max_scan: 5,

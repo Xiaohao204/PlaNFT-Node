@@ -1,4 +1,5 @@
 const contractInfo = require('../db/contractInfo');
+const contractPlatform = require('../db/contractPlatform');
 const nftInfo = require('../db/nftInfo');
 const salesInfo = require('../db/salesInfo');
 const listing = require('../db/listing');
@@ -48,6 +49,7 @@ const insertTransaction = async (saleInfo, nftInfoData) => {
 
 const plaNFTDB = {
     contractInfo,
+    contractPlatform,
     nftInfo,
     salesInfo,
     listing,

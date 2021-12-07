@@ -16,13 +16,22 @@ eth.getProvider = async function () {
     return provider === undefined ? new Ethers.providers.JsonRpcProvider(constants.network[index]) : provider;
 }
 
-eth.all_contracts = async function (contracts) {
-    const contractList = [];//定义合约数组通过循环获取合约信息集合
+eth.instanceTransferContracts = async function (contracts) {
+    const transferList = [];
     await Promise.all(contracts.map(async (contract) => {
         const connContractInfo = await connContract(contract, erc721_ABI);
-        contractList.push(connContractInfo);
+        transferList.push(connContractInfo);
     }));
-    return contractList;
+    return transferList;
+}
+
+eth.instanceSetTokenURIContracts = async function (contracts) {
+    const setTokenURIList = [];
+    await Promise.all(contracts.map(async (contract) => {
+        const connContractInfo = await connContract(contract, erc721_ABI);
+        setTokenURIList.push(connContractInfo);
+    }));
+    return setTokenURIList;
 }
 
 eth.getBlockTime = async function (blockHash) {

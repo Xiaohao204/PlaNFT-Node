@@ -12,6 +12,19 @@ nftInfo.updateNFTInfo = function (connection, params) {
     })
 }
 
+nftInfo.updateNFTInfoBySetTokenURI = function (params) {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(function (err, connection) {
+            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,title=?,token_uri=?,is_frozen=?,metadata=? WHERE contract_address = ? and token_id =?';
+            connection.query(sql, [params.description, params.properties, params.imageUrl, params.title, params.tokenURI, params.is_frozen, params.data, params.contractAddr, params.tokenId], function (err, result) {
+                if (err) throw err;
+                resolve(result.changedRows === 1);
+            });
+            connection.release();
+        })
+    })
+}
+
 nftInfo.insertNFTInfo = function (connection, params) {
     return new Promise(function (resolve, reject) {
         const sql = 'INSERT into nft_info (sales_id,end_block_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,title,is_frozen,token_uri,metadata) Values (?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE end_block_id=VALUES(end_block_id)';
