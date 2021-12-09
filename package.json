@@ -22,5 +22,6 @@
     "mysql": "^2.18.1",
     "node-schedule": "^2.0.0",
     "web3": "^1.6.0"
-  }
+  },
+  "devDependencies": {}
 }
