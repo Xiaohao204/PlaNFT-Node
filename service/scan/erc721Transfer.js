@@ -19,7 +19,7 @@ async function scanTransfer(contracts, chainBlockNumber) {
             const contractAddr = contract.address;
 
             // calc scan scope
-            const { end_block_id, collection_id, contract_name, type } = await contractInfo.getContractInfo(contractAddr);
+            const { end_block_id, collection_id, contract_name } = await contractInfo.getContractInfo(contractAddr);
             const startBlock = end_block_id;
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
@@ -36,14 +36,6 @@ async function scanTransfer(contracts, chainBlockNumber) {
                 if (nftBlockNumber !== 0) {
                     if (eventBlockNumber > nftBlockNumber) await updateTransaction(updateParams);
                 } else {
-                    const saleInfo = {
-                        toAddr,
-                        type,
-                        status: 0,
-                        collectNum: 0,
-                        viewedNum: 0,
-                        is_bundle: 0
-                    }
                     let nftInfoData = {
                         salesId: 0,
                         blockNumber: eventBlockNumber,
@@ -55,7 +47,7 @@ async function scanTransfer(contracts, chainBlockNumber) {
                         properties: null,
                         imageUrl: null,
                         title: null,
-                        is_frozen: 0,
+                        is_frozen: 1,
                         tokenURI: null,
                         data: null
                     }
@@ -71,13 +63,12 @@ async function scanTransfer(contracts, chainBlockNumber) {
                                 nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
                                 nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
                                 nftInfoData.tokenURI = tokenURI;
-                                nftInfoData.is_frozen = 1;
                                 nftInfoData.data = data;
-                                await insertTransaction(saleInfo, nftInfoData);
+                                await insertTransaction(nftInfoData);
                             }
                         });
                     } else {
-                        await insertTransaction(saleInfo, nftInfoData);
+                        await insertTransaction(nftInfoData);
                     }
                 }
             }));

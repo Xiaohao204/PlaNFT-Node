@@ -19,7 +19,7 @@ contractInfo.getTransferList = function () {
 contractInfo.getContractInfo = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT end_block_id,collection_id,contract_name,type FROM contract_info where address = ?";
+            const sql = "SELECT end_block_id,collection_id,contract_name FROM contract_info where address = ?";
             connection.query(sql, params, function (err, result) {
                 if (err) throw err;
                 resolve(result[0]);

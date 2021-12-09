@@ -20,14 +20,14 @@ async function startScan() {
   let provider = await eth.getProvider();
 
   // // Scan every ten seconds
-  // schedule.scheduleJob('*/10 * * * * *', async () => {
-  //   try {
-  //     console.log('startScan at time: ', new Date())
-  //     erc721Transfer.startScan(provider, transferContracts);
-  //   } catch (error) {
-  //     console.log('startScan error:%s \n', error)
-  //   }
-  // });
+  schedule.scheduleJob('*/10 * * * * *', async () => {
+    try {
+      console.log('startScan at time: ', new Date())
+      erc721Transfer.startScan(provider, transferContracts);
+    } catch (error) {
+      console.log('startScan error:%s \n', error)
+    }
+  });
 
   // Scan every ten seconds
   schedule.scheduleJob('*/12 * * * * *', async () => {

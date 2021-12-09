@@ -18,7 +18,7 @@ const updateTransaction = function (params) {
                 listing.delListing(connection, params);
                 offer.delOffer(connection, params);
                 listingExpiration.delSale(connection, params);
-                dutchAuctionSale.delSale(connection, params);
+                dutchAuctionSale.delSdale(connection, params);
                 connection.commit();
             } catch (error) {
                 console.log('updateTransaction error:%s \n', error)
@@ -30,11 +30,11 @@ const updateTransaction = function (params) {
     });
 }
 
-const insertTransaction = async (saleInfo, nftInfoData) => {
+const insertTransaction = async (nftInfoData) => {
     mysql.getConnection(async function (err, connection) {
         connection.beginTransaction();
         try {
-            const salesId = await salesInfo.insertSaleInfo(connection, saleInfo);
+            const salesId = await salesInfo.insertSaleInfo(connection, nftInfoData.toAddr);
             nftInfoData.salesId = salesId;
             nftInfo.insertNFTInfo(connection, nftInfoData);
             connection.commit();
