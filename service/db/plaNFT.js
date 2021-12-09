@@ -18,7 +18,7 @@ const updateTransaction = function (params) {
                 listing.delListing(connection, params);
                 offer.delOffer(connection, params);
                 listingExpiration.delSale(connection, params);
-                dutchAuctionSale.delSdale(connection, params);
+                dutchAuctionSale.delSale(connection, params);
                 connection.commit();
             } catch (error) {
                 console.log('updateTransaction error:%s \n', error)

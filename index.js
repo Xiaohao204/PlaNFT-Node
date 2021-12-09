@@ -1,7 +1,7 @@
 const erc721Transfer = require("./service/scan/erc721Transfer");
 const plaNFtSetTokenURI = require("./service/scan/plaNFtSetTokenURI");
 const eth = require("./utils/eth");
-const { contractInfo, contractPlatform } = require('./service/db/PlaNFT');
+const { contractInfo, contractPlatform } = require('./service/db/plaNFT');
 const schedule = require('node-schedule');
 
 async function startScan() {
@@ -19,7 +19,7 @@ async function startScan() {
   //获取provider
   let provider = await eth.getProvider();
 
-  // // Scan every ten seconds
+  // Scan every ten seconds
   schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
       console.log('startScan at time: ', new Date())
