@@ -7,12 +7,12 @@ const eventFilter = {
 
 const plaNFtSetTokenURI = {}
 
-plaNFtSetTokenURI.startScan = async function (provider, contracts) {
+plaNFtSetTokenURI.startScan = async function (provider, contracts, chain_symbol) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanSetTokenURI(contracts, chainBlockNumber);
+    await scanSetTokenURI(contracts, chainBlockNumber, chain_symbol);
 };
 
-async function scanSetTokenURI(contracts, chainBlockNumber) {
+async function scanSetTokenURI(contracts, chainBlockNumber, chain_symbol) {
     await Promise.all(contracts.map(async (contract) => {
         try {
             // contract address
@@ -20,7 +20,7 @@ async function scanSetTokenURI(contracts, chainBlockNumber) {
             // const { contract_name } = await contractInfo.getContractInfo(contractAddr);
 
             // calc scan scope
-            const startBlock = await contractPlatform.getLastNumber(contractAddr);
+            const startBlock = await contractPlatform.getLastNumber([contractAddr, chain_symbol]);
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
             // listening transfer event
@@ -51,7 +51,7 @@ async function scanSetTokenURI(contracts, chainBlockNumber) {
                     });
                 }
             }));
-            await contractPlatform.setLastNumber([endBlock, contractAddr, startBlock]);
+            await contractPlatform.setLastNumber([endBlock, contractAddr, startBlock, chain_symbol]);
             console.log('contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             console.log('scanTransfer error:%s \n', error)

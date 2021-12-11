@@ -34,7 +34,7 @@ const insertTransaction = async (nftInfoData) => {
     mysql.getConnection(async function (err, connection) {
         connection.beginTransaction();
         try {
-            const salesId = await salesInfo.insertSaleInfo(connection, nftInfoData.toAddr);
+            const salesId = await salesInfo.insertSaleInfo(connection, nftInfoData);
             nftInfoData.salesId = salesId;
             nftInfo.insertNFTInfo(connection, nftInfoData);
             connection.commit();

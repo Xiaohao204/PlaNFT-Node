@@ -7,19 +7,19 @@ const eventFilter = {
 
 const erc721Transfer = {}
 
-erc721Transfer.startScan = async function (provider, contracts) {
+erc721Transfer.startScan = async function (provider, contracts, chain_symbol) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanTransfer(contracts, chainBlockNumber);
+    await scanTransfer(contracts, chainBlockNumber, chain_symbol);
 };
 
-async function scanTransfer(contracts, chainBlockNumber) {
+async function scanTransfer(contracts, chainBlockNumber, chain_symbol) {
     await Promise.all(contracts.map(async (contract) => {
         try {
             // contract address
             const contractAddr = contract.address;
 
             // calc scan scope
-            const { end_block_id, collection_id, contract_name } = await contractInfo.getContractInfo(contractAddr);
+            const { end_block_id, collection_id, contract_name } = await contractInfo.getContractInfo({ contractAddr, chain_symbol });
             const startBlock = end_block_id;
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
@@ -30,7 +30,7 @@ async function scanTransfer(contracts, chainBlockNumber) {
                 const toAddr = value.args['to'];
                 const tokenId = parseInt(value.args['tokenId']._hex);
                 const eventBlockNumber = value.blockNumber;
-                const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber }
+                const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber, chain_symbol }
                 const nftInfoDetails = await nftInfo.getNFTInfoDetails(updateParams);
 
                 if (nftInfoDetails !== null) {
@@ -49,7 +49,8 @@ async function scanTransfer(contracts, chainBlockNumber) {
                         title: null,
                         is_frozen: 1,
                         tokenURI: null,
-                        data: null
+                        data: null,
+                        chain_symbol
                     }
                     const tokenURI = await contract.tokenURI(tokenId);
                     if (tokenURI !== '') {
@@ -72,8 +73,8 @@ async function scanTransfer(contracts, chainBlockNumber) {
                     }
                 }
             }));
-            await contractInfo.setLastNumber([endBlock, contractAddr, end_block_id]);
-            console.log('contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', contractAddr, startBlock, endBlock, scanResult.length);
+            await contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
+            console.log('chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             console.log('scanTransfer error:%s \n', error)
         }

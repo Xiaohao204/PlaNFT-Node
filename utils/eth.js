@@ -4,12 +4,23 @@ const constants = require("../config/constants");
 
 let provider = undefined;
 const eth = {};
-let contracts = {};
+let transferContracts = {};
+let setTokenURIContracts = {};
 let index = 0;
 let flip = false;
 
-async function connContract(address, abi) {
-    return contracts[address] === undefined ? new Ethers.Contract(address, abi, await eth.getProvider()) : contracts[address]
+async function connTransferContract(address, abi) {
+    if (transferContracts[address] === undefined) {
+        transferContracts[address] = new Ethers.Contract(address, abi, await eth.getProvider());
+    }
+    return transferContracts[address]
+}
+
+async function connSetTokenURIContract(address, abi) {
+    if (setTokenURIContracts[address] === undefined) {
+        setTokenURIContracts[address] = new Ethers.Contract(address, abi, await eth.getProvider());
+    }
+    return setTokenURIContracts[address]
 }
 
 eth.getProvider = async function () {
@@ -18,19 +29,23 @@ eth.getProvider = async function () {
 
 eth.instanceTransferContracts = async function (contracts) {
     const transferList = [];
-    await Promise.all(contracts.map(async (contract) => {
-        const connContractInfo = await connContract(contract, erc721_ABI);
-        transferList.push(connContractInfo);
-    }));
+    if (contracts != undefined) {
+        await Promise.all(contracts.map(async (contract) => {
+            const connContractInfo = await connTransferContract(contract, erc721_ABI);
+            transferList.push(connContractInfo);
+        }));
+    }
     return transferList;
 }
 
 eth.instanceSetTokenURIContracts = async function (contracts) {
     const setTokenURIList = [];
-    await Promise.all(contracts.map(async (contract) => {
-        const connContractInfo = await connContract(contract, erc721_ABI);
-        setTokenURIList.push(connContractInfo);
-    }));
+    if (contracts != undefined) {
+        await Promise.all(contracts.map(async (contract) => {
+            const connContractInfo = await connSetTokenURIContract(contract, erc721_ABI);
+            setTokenURIList.push(connContractInfo);
+        }));
+    }
     return setTokenURIList;
 }
 

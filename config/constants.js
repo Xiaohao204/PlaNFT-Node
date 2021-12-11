@@ -14,6 +14,15 @@ module.exports = {
             SetTokenURI: "0xd2d827dddfc9c9a02afc5fc68d3251684b36e213a7999ebd90a861f25df4077e"
         }
     },
+    chain_symbol: {
+        BSC: 'BSC',
+        RINKEBY: 'RINKEBY',
+        POLYGON: 'POLYGON',
+        ARBITRUM: 'ARBITRUM',
+        FANTOM: 'FANTOM',
+        AVAX: 'AVAX',
+        AURORA: 'AURORA'
+    },
     max_scan: 5,
 }
 
