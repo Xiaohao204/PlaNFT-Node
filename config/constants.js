@@ -16,7 +16,7 @@ module.exports = {
     },
     chain_symbol: {
         BSC: 'BSC',
-        RINKEBY: 'RINKEBY',
+        ETH: 'ETH',
         POLYGON: 'POLYGON',
         ARBITRUM: 'ARBITRUM',
         FANTOM: 'FANTOM',
