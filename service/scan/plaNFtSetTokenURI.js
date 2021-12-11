@@ -44,7 +44,8 @@ async function scanSetTokenURI(contracts, chainBlockNumber, chain_symbol) {
                                 title: metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId,
                                 tokenURI,
                                 is_frozen: 1,
-                                data: data
+                                data: data,
+                                chain_symbol
                             }
                             await nftInfo.updateNFTInfoBySetTokenURI(nftInfoData);
                         }

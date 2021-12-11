@@ -15,8 +15,8 @@ nftInfo.updateNFTInfo = function (connection, params) {
 nftInfo.updateNFTInfoBySetTokenURI = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,title=?,token_uri=?,is_frozen=?,metadata=? WHERE contract_address = ? and token_id =?';
-            connection.query(sql, [params.description, params.properties, params.imageUrl, params.title, params.tokenURI, params.is_frozen, params.data, params.contractAddr, params.tokenId], function (err, result) {
+            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,title=?,token_uri=?,is_frozen=?,metadata=? WHERE contract_address = ? and token_id =? and chain_symbol=?';
+            connection.query(sql, [params.description, params.properties, params.imageUrl, params.title, params.tokenURI, params.is_frozen, params.data, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
                 if (err) throw err;
                 resolve(result.changedRows === 1);
             });
