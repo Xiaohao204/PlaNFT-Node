@@ -53,7 +53,7 @@ async function scanSetTokenURI(contracts, chainBlockNumber, chain_symbol) {
                 }
             }));
             await contractPlatform.setLastNumber([endBlock, contractAddr, startBlock, chain_symbol]);
-            console.log('contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', contractAddr, startBlock, endBlock, scanResult.length);
+            console.log('chain_symbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             console.log('scanTransfer error:%s \n', error)
         }
