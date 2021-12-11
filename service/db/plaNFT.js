@@ -8,17 +8,17 @@ const mysql = require('../../config/mysql');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 
-const updateTransaction = function (params) {
+const updateTransaction = function (nftInfoDetails, updateParams) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
             connection.beginTransaction();
             try {
-                nftInfo.updateNFTInfo(connection, params);
-                salesInfo.updateSaleInfo(connection, params);
-                listing.delListing(connection, params);
-                offer.delOffer(connection, params);
-                listingExpiration.delSale(connection, params);
-                dutchAuctionSale.delSale(connection, params);
+                nftInfo.updateNFTInfo(connection, updateParams);
+                salesInfo.updateSaleInfo(connection, nftInfoDetails, updateParams);
+                listing.delListing(connection, nftInfoDetails);
+                offer.delOffer(connection, nftInfoDetails, updateParams);
+                listingExpiration.delSale(connection, nftInfoDetails);
+                dutchAuctionSale.delSale(connection, nftInfoDetails);
                 connection.commit();
             } catch (error) {
                 console.log('updateTransaction error:%s \n', error)

@@ -22,7 +22,7 @@ async function startScan() {
   // Scan every ten seconds
   schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
-      console.log('startScan at time: ', new Date())
+      console.log('start Transfer Scan at time: ', new Date())
       erc721Transfer.startScan(provider, transferContracts);
     } catch (error) {
       console.log('startScan error:%s \n', error)
@@ -32,7 +32,7 @@ async function startScan() {
   // Scan every ten seconds
   schedule.scheduleJob('*/12 * * * * *', async () => {
     try {
-      console.log('startScan at time: ', new Date())
+      console.log('start SetTokenURI Scan at time: ', new Date())
       plaNFtSetTokenURI.startScan(provider, setTokenURIContracts);
     } catch (error) {
       console.log('startScan error:%s \n', error)

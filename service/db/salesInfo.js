@@ -1,9 +1,9 @@
 const salesInfo = {}
 
-salesInfo.updateSaleInfo = function (connection, params) {
+salesInfo.updateSaleInfo = function (connection, nftInfoDetails, params) {
     return new Promise(function (resolve, reject) {
-        const sql = 'update sales_info set user_address = ?, status = 0, sale_method = null, price_starts = null, current_price = null, reserve_price = null, last_traded = now() where id = (SELECT sales_id FROM nft_info where contract_address = ? and token_id =?)';
-        connection.query(sql, [params.toAddr, params.contractAddr, params.tokenId], function (err, result) {
+        const sql = 'update sales_info set user_address = ?, status = 0, sale_method = null, price_starts = null, current_price = null, reserve_price = null, last_traded = now() where id = ?';
+        connection.query(sql, [params.toAddr,nftInfoDetails.sales_id], function (err, result) {
             if (err) throw err;
             resolve(result.changedRows === 1);
         });

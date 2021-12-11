@@ -31,10 +31,10 @@ async function scanTransfer(contracts, chainBlockNumber) {
                 const tokenId = parseInt(value.args['tokenId']._hex);
                 const eventBlockNumber = value.blockNumber;
                 const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber }
-                const nftBlockNumber = await nftInfo.getNFTInfoBlockNumber(updateParams);
+                const nftInfoDetails = await nftInfo.getNFTInfoDetails(updateParams);
 
-                if (nftBlockNumber !== 0) {
-                    if (eventBlockNumber > nftBlockNumber) await updateTransaction(updateParams);
+                if (nftInfoDetails !== null) {
+                    if (eventBlockNumber > nftInfoDetails.end_block_id) await updateTransaction(nftInfoDetails, updateParams);
                 } else {
                     let nftInfoData = {
                         salesId: 0,

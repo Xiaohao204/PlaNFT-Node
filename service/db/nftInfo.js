@@ -36,13 +36,13 @@ nftInfo.insertNFTInfo = function (connection, params) {
     })
 }
 
-nftInfo.getNFTInfoBlockNumber = async (params) => {
+nftInfo.getNFTInfoDetails = async (params) => {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT end_block_id from nft_info where contract_address = ? and token_id =?";
+            const sql = "SELECT id,sales_id,end_block_id from nft_info where contract_address = ? and token_id =?";
             connection.query(sql, [params.contractAddr, params.tokenId], function (err, result) {
                 if (err) throw err;
-                resolve(result.length === 0 ? 0 : result[0].end_block_id);
+                resolve(result.length === 0 ? null : result[0]);
             });
             connection.release();
         })
