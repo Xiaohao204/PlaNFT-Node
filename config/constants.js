@@ -23,6 +23,6 @@ module.exports = {
         AVAX: 'AVAX',
         AURORA: 'AURORA'
     },
-    max_scan: 5,
+    max_scan: 10,
 }
 
