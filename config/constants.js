@@ -25,4 +25,3 @@ module.exports = {
     },
     max_scan: 10,
 }
-
