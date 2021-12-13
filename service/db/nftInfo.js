@@ -41,7 +41,7 @@ nftInfo.getNFTInfoDetails = async (params) => {
         mysql.getConnection(function (err, connection) {
             // const sql = "SELECT id,sales_id,end_block_id from nft_info where contract_address = ? and token_id =? and chain_symbol=?";
             const sql = "SELECT id,sales_id,end_block_id from nft_info where contract_address = ? and token_id =?";
-            connection.query(sql, [params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
+            connection.query(sql, [params.contractAddr, params.tokenId], function (err, result) {
                 if (err) throw err;
                 resolve(result.length === 0 ? null : result[0]);
             });
