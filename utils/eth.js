@@ -24,7 +24,10 @@ async function connSetTokenURIContract(address, abi) {
 }
 
 eth.getProvider = async function () {
-    return provider === undefined ? new Ethers.providers.JsonRpcProvider(constants.network[index]) : provider;
+    if (provider === undefined) {
+        provider = new Ethers.providers.JsonRpcProvider(constants.network[index]);
+    }
+    return provider;
 }
 
 eth.instanceTransferContracts = async function (contracts) {
