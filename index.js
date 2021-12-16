@@ -12,11 +12,6 @@ async function startScan() {
   // contract list for setTokenURI scan
   let setTokenURIList = await contractPlatform.getSetTokenURIList(chain_symbol);
 
-  //获取合约实例
-  let transferContracts = await eth.instanceTransferContracts(transferList);
-  //获取合约实例
-  let setTokenURIContracts = await eth.instanceSetTokenURIContracts(setTokenURIList);
-
   //获取provider
   let provider = await eth.getProvider();
 
@@ -24,7 +19,7 @@ async function startScan() {
   schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
       console.log('start Transfer Scan at time: ', new Date())
-      erc721Transfer.startScan(provider, transferContracts, chain_symbol);
+      erc721Transfer.startScan(provider, transferList, chain_symbol);
     } catch (error) {
       console.log('startScan error:%s \n', error)
     }
@@ -34,7 +29,7 @@ async function startScan() {
   schedule.scheduleJob('*/12 * * * * *', async () => {
     try {
       console.log('start SetTokenURI Scan at time: ', new Date())
-      plaNFtSetTokenURI.startScan(provider, setTokenURIContracts, chain_symbol);
+      plaNFtSetTokenURI.startScan(provider, setTokenURIList, chain_symbol);
     } catch (error) {
       console.log('startScan error:%s \n', error)
     }
@@ -55,11 +50,9 @@ async function startScan() {
     try {
       console.log('update transferList: ', new Date())
       transferList = await contractInfo.getTransferList(chain_symbol);
-      transferContracts = await eth.instanceTransferContracts(transferList);
 
       console.log('update setTokenList: ', new Date())
       setTokenURIList = await contractPlatform.getSetTokenURIList(chain_symbol);
-      setTokenURIContracts = await eth.instanceSetTokenURIContracts(setTokenURIList);
     } catch (error) {
       console.log('updateTransferList error:%s \n', error)
     }

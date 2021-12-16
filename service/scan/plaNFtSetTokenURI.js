@@ -1,23 +1,22 @@
 const Constants = require('../../config/constants');
-const { contractPlatform, nftInfo, contractInfo } = require('../db/plaNFT')
+const { contractPlatform, nftInfo } = require('../db/plaNFT')
 const ipfs = require('../network/ipfs')
+const eth = require('../../utils/eth')
 const eventFilter = {
     topics: [Constants.event_topics.ERC721.SetTokenURI]
 }
 
 const plaNFtSetTokenURI = {}
 
-plaNFtSetTokenURI.startScan = async function (provider, contracts, chain_symbol) {
+plaNFtSetTokenURI.startScan = async function (provider, contractAddressList, chain_symbol) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanSetTokenURI(contracts, chainBlockNumber, chain_symbol);
+    await scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symbol);
 };
 
-async function scanSetTokenURI(contracts, chainBlockNumber, chain_symbol) {
-    await Promise.all(contracts.map(async (contract) => {
+async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symbol) {
+    await Promise.all(contractAddressList.map(async (contractAddr) => {
         try {
-            // contract address
-            const contractAddr = contract.address;
-            // const { contract_name } = await contractInfo.getContractInfo(contractAddr);
+            const contract = await eth.instanceContracts(contractAddr);
 
             // calc scan scope
             const startBlock = await contractPlatform.getLastNumber([contractAddr, chain_symbol]);

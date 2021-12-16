@@ -1,5 +1,6 @@
 const Constants = require('../../config/constants');
 const { contractInfo, nftInfo, updateTransaction, insertTransaction } = require('../db/plaNFT')
+const eth = require('../../utils/eth')
 const ipfs = require('../network/ipfs')
 const eventFilter = {
     topics: [Constants.event_topics.ERC721.Transfer]
@@ -7,17 +8,15 @@ const eventFilter = {
 
 const erc721Transfer = {}
 
-erc721Transfer.startScan = async function (provider, contracts, chain_symbol) {
+erc721Transfer.startScan = async function (provider, contractAddressList, chain_symbol) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanTransfer(contracts, chainBlockNumber, chain_symbol);
+    await scanTransfer(contractAddressList, chainBlockNumber, chain_symbol);
 };
 
-async function scanTransfer(contracts, chainBlockNumber, chain_symbol) {
-    await Promise.all(contracts.map(async (contract) => {
+async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {
+    await Promise.all(contractAddressList.map(async (contractAddr) => {
         try {
-            // contract address
-            const contractAddr = contract.address;
-
+            const contract = await eth.instanceContracts(contractAddr);
             // calc scan scope
             const { end_block_id, collection_id, contract_name } = await contractInfo.getContractInfo({ contractAddr, chain_symbol });
             const startBlock = end_block_id;
