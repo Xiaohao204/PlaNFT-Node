@@ -28,7 +28,7 @@ async function scanTransfer(contracts, chainBlockNumber, chain_symbol) {
             // resolve scanResult
             await Promise.all(scanResult.map(async (value) => {
                 const toAddr = value.args['to'];
-                const tokenId = parseInt(value.args['tokenId']._hex);
+                const tokenId = value.args['tokenId'].toNumber();
                 const eventBlockNumber = value.blockNumber;
                 const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber, chain_symbol }
                 const nftInfoDetails = await nftInfo.getNFTInfoDetails(updateParams);
@@ -52,7 +52,13 @@ async function scanTransfer(contracts, chainBlockNumber, chain_symbol) {
                         data: null,
                         chain_symbol
                     }
-                    const tokenURI = await contract.tokenURI(tokenId);
+                    let tokenURI = '';
+                    try {
+                        tokenURI = await contract.tokenURI(tokenId);
+                    } catch (err) {
+                        console.log('chain_symbol:%s contractAddress:%s tokenID:%d URI query for nonexistent token!', chain_symbol, contractAddr, tokenId)
+                    }
+
                     if (tokenURI !== '') {
                         const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
                         // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);

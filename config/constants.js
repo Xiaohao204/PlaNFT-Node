@@ -1,6 +1,7 @@
 module.exports = {
     network: [
-        "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/polygon/mumbai"
+        // "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/polygon/mumbai"
+        "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/eth/rinkeby"
     ],
     ipfs: {
         main: "https://ipfs.io/ipfs/",

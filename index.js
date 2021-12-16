@@ -1,6 +1,6 @@
 const erc721Transfer = require("./service/scan/erc721Transfer");
 const plaNFtSetTokenURI = require("./service/scan/plaNFtSetTokenURI");
-const chain_symbol = require("./config/constants").chain_symbol.POLYGON;
+const chain_symbol = require("./config/constants").chain_symbol.ETH;
 const eth = require("./utils/eth");
 const { contractInfo, contractPlatform } = require('./service/db/plaNFT');
 const schedule = require('node-schedule');
