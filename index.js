@@ -36,7 +36,7 @@ async function startScan() {
   });
 
   // update infura apiKey
-  schedule.scheduleJob('3 0 */8 * * *', async () => {
+  schedule.scheduleJob('3 0 */6 * * *', async () => {
     try {
       console.log('update infura key: ', new Date())
       provider = await eth.updateProvider();
