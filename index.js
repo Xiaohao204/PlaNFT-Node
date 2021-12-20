@@ -1,47 +1,51 @@
-const express = require('express')
-const app = express()
-let users = require('./db/user');
-const solidityMoni = require("./action/solidityMonitor");
-const eth = require("./contracts/eth");
-let transfer = require('./db/transfer');
-
-app.get('/', (req, res) => res.send('welcome to plaNFT!'))
-app.listen(3000, () => console.log('Start Server, listening on port 3000!'))
-
-// get user info
-app.get('/users', (req, res) => {
-  users.actionGetUsers(rows => {
-    //  设置允许跨域访问
-    res.set({ 'Access-Control-Allow-Origin': '*' })
-      .send(rows)
-  });
-});
-
-
-//得到合约交易记录信息
-// app.get('/solidity/startScan',solidityMoni.startScan);
-
-//执行定时任务  2021-11-12 
+const erc721Transfer = require("./service/scan/erc721Transfer");
+const plaNFtSetTokenURI = require("./service/scan/plaNFtSetTokenURI");
+const chain_symbol = require("./config/constants").chain_symbol.ETH;
+const eth = require("./utils/eth");
+const { contractInfo, contractPlatform } = require('./service/db/plaNFT');
 const schedule = require('node-schedule');
-async function startScan() {
-  //获取服务器中待扫块的合约地址
-  const nftAddressList = await transfer.actionGetNFTInfo();
-  //根据合约地址集合拿到合约对象列表
-  let array = new Array();
-  for (var i = 0; i < nftAddressList.length; i++) {
-     array.push(nftAddressList[i].address);
-  }
-  const contracts = await eth.all_contracts(array);
 
-  //  获取起始扫描区块
-  const provider = await eth.getProvider();
-  // Scan every six seconds
-  schedule.scheduleJob('*/6 * * * * *', () => {
-    console.log('startScan at time: ', new Date())
+async function startScan() {
+
+  // contract list for transfer scan
+  let transferList = await contractInfo.getTransferList(chain_symbol);
+  // contract list for setTokenURI scan
+  let setTokenURIList = await contractPlatform.getSetTokenURIList(chain_symbol);
+
+  //获取provider
+  let provider = await eth.getProvider();
+
+  // Scan every ten seconds
+  schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
-      solidityMoni.startScan(contracts, provider);
-    } catch (e) {
-      console.log('there has some error:\n', e)
+      console.log('start Scan at time: ', new Date())
+      erc721Transfer.startScan(provider, transferList, chain_symbol);
+      plaNFtSetTokenURI.startScan(provider, setTokenURIList, chain_symbol);
+    } catch (error) {
+      console.log('startScan error:%s \n', error)
+    }
+  });
+
+  // update infura apiKey
+  schedule.scheduleJob('3 0 */6 * * *', async () => {
+    try {
+      console.log('update infura key: ', new Date())
+      provider = await eth.updateProvider();
+    } catch (error) {
+      console.log('update infura key error:%s \n', error)
+    }
+  });
+
+  // update transferList
+  schedule.scheduleJob('0 * * * * *', async () => {
+    try {
+      console.log('update transferList: ', new Date())
+      transferList = await contractInfo.getTransferList(chain_symbol);
+
+      console.log('update setTokenList: ', new Date())
+      setTokenURIList = await contractPlatform.getSetTokenURIList(chain_symbol);
+    } catch (error) {
+      console.log('updateTransferList error:%s \n', error)
     }
   });
 }

@@ -1,3 +1,1 @@
-# PlaNFT-Node
-start : npm install all
-        npm install express
+# PlaNFT_Ethereum_Listener
