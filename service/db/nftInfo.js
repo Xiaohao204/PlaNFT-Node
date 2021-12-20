@@ -1,12 +1,14 @@
 const mysql = require('../../config/mysql');
+const telegram = require('../network/telegram')
 
 const nftInfo = {}
 
-nftInfo.updateNFTInfo = function (connection, params) {
+nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails) {
     return new Promise(function (resolve, reject) {
         const sql = 'UPDATE nft_info SET end_block_id=?,user_address = ? WHERE contract_address = ? and token_id =? and chain_symbol=?';
         connection.query(sql, [params.eventBlockNumber, params.toAddr, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
             if (err) throw err;
+            telegram.changeOwnerNews(params, nftInfoDetails)
             resolve(result.changedRows === 1);
         });
     })
@@ -39,7 +41,7 @@ nftInfo.insertNFTInfo = function (connection, params) {
 nftInfo.getNFTInfoDetails = async (params) => {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT id,sales_id,end_block_id from nft_info where contract_address = ? and token_id =? and chain_symbol=?";
+            const sql = "SELECT id,sales_id,user_address,end_block_id from nft_info where contract_address = ? and token_id =? and chain_symbol=?";
             connection.query(sql, [params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
                 if (err) throw err;
                 resolve(result.length === 0 ? null : result[0]);

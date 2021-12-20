@@ -21,7 +21,6 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
             const { end_block_id, collection_id, contract_name } = await contractInfo.getContractInfo({ contractAddr, chain_symbol });
             const startBlock = end_block_id;
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
-
             // listening transfer event
             const scanResult = await contract.queryFilter(eventFilter, startBlock, endBlock);
             // resolve scanResult
@@ -29,9 +28,9 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                 const toAddr = value.args['to'];
                 const tokenId = value.args['tokenId'].toNumber();
                 const eventBlockNumber = value.blockNumber;
-                const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber, chain_symbol }
+                const txHash = value.transactionHash;
+                const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber, chain_symbol, txHash }
                 const nftInfoDetails = await nftInfo.getNFTInfoDetails(updateParams);
-
                 if (nftInfoDetails !== null) {
                     if (eventBlockNumber > nftInfoDetails.end_block_id) await updateTransaction(nftInfoDetails, updateParams);
                 } else {

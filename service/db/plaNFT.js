@@ -13,7 +13,7 @@ const updateTransaction = function (nftInfoDetails, updateParams) {
         mysql.getConnection(function (err, connection) {
             connection.beginTransaction();
             try {
-                nftInfo.updateNFTInfo(connection, updateParams);
+                nftInfo.updateNFTInfo(connection, updateParams, nftInfoDetails);
                 salesInfo.updateSaleInfo(connection, nftInfoDetails, updateParams);
                 listing.delListing(connection, nftInfoDetails);
                 offer.delOffer(connection, nftInfoDetails, updateParams);
