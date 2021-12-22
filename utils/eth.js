@@ -2,11 +2,9 @@ const Ethers = require("ethers")
 const erc721_ABI = require("../contracts/erc721.json").abi
 const constants = require("../config/constants");
 
-let provider = undefined;
 const eth = {};
+let provider = {};
 let contracts = {};
-let index = 0;
-let flip = false;
 const apiList = constants.network.ETH;
 async function connTransferContract(address, abi) {
     if (contracts[address] === undefined) {
@@ -16,10 +14,11 @@ async function connTransferContract(address, abi) {
 }
 
 eth.getProvider = async function () {
-    if (provider === undefined) {
-        provider = new Ethers.providers.JsonRpcProvider(apiList[index]);
+    const index = getRandomInt(apiList.length);
+    if (provider[index] === undefined) {
+        provider[index] = new Ethers.providers.JsonRpcProvider(apiList[index]);
     }
-    return provider;
+    return provider[index];
 }
 
 eth.instanceContracts = async function (contractAddress) {
@@ -32,22 +31,8 @@ eth.getBlockTime = async function (blockHash) {
     return res.timestamp * 1000;
 }
 
-eth.updateProvider = async function () {
-    if (flip) {
-        if (index > 0) index--;
-        else {
-            flip = !flip;
-            index++
-        }
-    } else {
-        if (index < apiList.length - 1) index++;
-        else {
-            flip = !flip;
-            index--
-        }
-    }
-    provider = new Ethers.providers.JsonRpcProvider(apiList[index])
-    return provider;
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
 module.exports = eth;
