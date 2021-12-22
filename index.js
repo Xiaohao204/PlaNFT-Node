@@ -22,7 +22,7 @@ async function startScan() {
   });
 
   // Scan every ten seconds
-  schedule.scheduleJob('* */5 * * * *', async () => {
+  schedule.scheduleJob('0 */5 * * * *', async () => {
     try {
       console.log('delete provider cache: ', new Date())
       await eth.deleteProvider();
