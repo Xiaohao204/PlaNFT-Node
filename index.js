@@ -20,6 +20,16 @@ async function startScan() {
       console.log('startScan error:%s \n', error)
     }
   });
+
+  // Scan every ten seconds
+  schedule.scheduleJob('* */5 * * * *', async () => {
+    try {
+      console.log('delete provider cache: ', new Date())
+      await eth.deleteProvider();
+    } catch (error) {
+      console.log('delete provider cache:%s \n', error)
+    }
+  });
 }
 
 startScan();

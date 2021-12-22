@@ -21,6 +21,10 @@ eth.getProvider = async function () {
     return provider[index];
 }
 
+eth.deleteProvider = async function () {
+    provider = {}
+}
+
 eth.instanceContracts = async function (contractAddress) {
     return await connTransferContract(contractAddress, erc721_ABI);
 }
