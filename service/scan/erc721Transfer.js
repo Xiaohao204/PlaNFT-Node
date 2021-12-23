@@ -11,11 +11,11 @@ const erc721Transfer = {}
 
 erc721Transfer.startScan = async function (provider, contractAddressList, chain_symbol) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanTransfer(contractAddressList, chainBlockNumber, chain_symbol);
+    scanTransfer(contractAddressList, chainBlockNumber, chain_symbol);
 };
 
-async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {
-    await Promise.all(contractAddressList.map(async (contractAddr) => {
+async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {  
+    contractAddressList.map(async (contractAddr) => {
         try {
             const contract = await eth.instanceContracts(contractAddr);
             // calc scan scope
@@ -86,7 +86,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
         } catch (error) {
             console.log('scanTransfer error contractAddr:%s \n', contractAddr)
         }
-    }));
+    });
 }
 
 module.exports = erc721Transfer;
