@@ -58,15 +58,19 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                             const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
                             // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
                             ipfs.getMetaData(url, async (err, data) => {
-                                if (!err) {
-                                    metadata = JSON.parse(data);
-                                    nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
-                                    nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
-                                    nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
-                                    nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
-                                    nftInfoData.tokenURI = tokenURI;
-                                    nftInfoData.data = data;
-                                    await insertTransaction(nftInfoData);
+                                try {
+                                    if (!err) {
+                                        metadata = JSON.parse(data);
+                                        nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
+                                        nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
+                                        nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
+                                        nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
+                                        nftInfoData.tokenURI = tokenURI;
+                                        nftInfoData.data = data;
+                                        await insertTransaction(nftInfoData);
+                                    }
+                                } catch (error) {
+                                    console.log('getMetaData parse error!')
                                 }
                             });
                         } else {

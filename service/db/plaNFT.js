@@ -11,8 +11,8 @@ const dutchAuctionSale = require('../db/dutchAuctionSale');
 const updateTransaction = function (nftInfoDetails, updateParams) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            connection.beginTransaction();
             try {
+                connection.beginTransaction();
                 nftInfo.updateNFTInfo(connection, updateParams, nftInfoDetails);
                 salesInfo.updateSaleInfo(connection, nftInfoDetails, updateParams);
                 listing.delListing(connection, nftInfoDetails);
@@ -32,8 +32,8 @@ const updateTransaction = function (nftInfoDetails, updateParams) {
 
 const insertTransaction = async (nftInfoData) => {
     mysql.getConnection(async function (err, connection) {
-        connection.beginTransaction();
         try {
+            connection.beginTransaction();
             const salesId = await salesInfo.insertSaleInfo(connection, nftInfoData);
             nftInfoData.salesId = salesId;
             await nftInfo.insertNFTInfo(connection, nftInfoData);
