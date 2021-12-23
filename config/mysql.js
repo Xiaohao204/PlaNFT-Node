@@ -13,6 +13,7 @@ const config = {
     user: process.env.user,
     password: process.env.password,
     port: process.env.port,
-    database: process.env.database
+    database: process.env.database,
+    charset: 'UTF8MB4_BIN'
 }
 module.exports = mysql.createPool(config);

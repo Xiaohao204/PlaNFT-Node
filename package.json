@@ -18,6 +18,7 @@
   "homepage": "https://github.com/PlaNFT/PlaNFT-Node#readme",
   "dependencies": {
     "axios": "^0.24.0",
+    "big-number": "^2.0.0",
     "ethers": "^5.5.1",
     "express": "^4.17.1",
     "mysql": "^2.18.1",

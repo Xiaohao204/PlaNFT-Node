@@ -29,7 +29,7 @@ nftInfo.updateNFTInfoBySetTokenURI = function (params) {
 
 nftInfo.insertNFTInfo = function (connection, params) {
     return new Promise(function (resolve, reject) {
-        const sql = 'INSERT into nft_info (sales_id,end_block_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,title,is_frozen,token_uri,metadata,chain_symbol) Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE updated_at=now()';
+        const sql = 'INSERT into nft_info (sales_id,end_block_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,title,is_frozen,token_uri,metadata,chain_symbol) Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
         connection.query(sql, [params.salesId, params.blockNumber, params.collection_id, params.tokenId, params.contractAddr, params.toAddr,
         params.description, params.properties, params.imageUrl, params.title, params.is_frozen, params.tokenURI, params.data, params.chain_symbol], function (err, result) {
             if (err) throw err;

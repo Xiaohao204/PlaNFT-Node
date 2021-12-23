@@ -36,7 +36,7 @@ const insertTransaction = async (nftInfoData) => {
         try {
             const salesId = await salesInfo.insertSaleInfo(connection, nftInfoData);
             nftInfoData.salesId = salesId;
-            nftInfo.insertNFTInfo(connection, nftInfoData);
+            await nftInfo.insertNFTInfo(connection, nftInfoData);
             connection.commit();
         } catch (error) {
             console.log('updateTransaction error:%s \n', error)

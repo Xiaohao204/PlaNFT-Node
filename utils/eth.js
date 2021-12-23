@@ -1,11 +1,10 @@
 const Ethers = require("ethers")
 const erc721_ABI = require("../contracts/erc721.json").abi
-const constants = require("../config/constants");
 
 const eth = {};
 let provider = {};
 let contracts = {};
-const apiList = constants.network.ETH;
+let apiList = undefined;
 async function connTransferContract(address, abi) {
     if (contracts[address] === undefined) {
         contracts[address] = new Ethers.Contract(address, abi, await eth.getProvider());
@@ -19,6 +18,10 @@ eth.getProvider = async function () {
         provider[index] = new Ethers.providers.JsonRpcProvider(apiList[index]);
     }
     return provider[index];
+}
+
+eth.setApiList = async function (apis) {
+    apiList = apis
 }
 
 eth.deleteProvider = async function () {
