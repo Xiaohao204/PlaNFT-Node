@@ -56,6 +56,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                                 is_frozen: 1,
                                 tokenURI: null,
                                 data: null,
+                                type: 3,
                                 chain_symbol
                             }
                             let tokenURI = await contract.tokenURI(tokenId);
@@ -77,6 +78,9 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                                             nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
                                             nftInfoData.tokenURI = tokenURI;
                                             nftInfoData.data = metadata.toString();
+                                            if (nftInfoData.animationUrl !== null) {
+                                                nftInfoData.type = 4;
+                                            }
                                             await insertTransaction(nftInfoData);
                                         }
                                     })
