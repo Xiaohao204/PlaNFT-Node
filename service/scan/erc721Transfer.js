@@ -1,5 +1,4 @@
 const Constants = require('../../config/constants');
-const BigNumber = require('big-number');
 const { contractInfo, nftInfo, updateTransaction, insertTransaction } = require('../db/plaNFT')
 const eth = require('../../utils/eth')
 const ipfs = require('../network/ipfs')
@@ -14,7 +13,7 @@ erc721Transfer.startScan = async function (provider, contractAddressList, chain_
     scanTransfer(contractAddressList, chainBlockNumber, chain_symbol);
 };
 
-async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {  
+async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {
     contractAddressList.map(async (contractAddr) => {
         try {
             const contract = await eth.instanceContracts(contractAddr);

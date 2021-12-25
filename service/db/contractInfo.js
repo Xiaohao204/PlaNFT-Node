@@ -5,7 +5,7 @@ const contractInfo = {}
 contractInfo.getTransferList = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT address from contract_info where chain_symbol=?";
+            const sql = "SELECT address from contract_info where chain_symbol=? order by end_block_id";
             connection.query(sql, params, function (err, result) {
                 if (err) throw err;
                 result = result.map(obj => obj.address);
