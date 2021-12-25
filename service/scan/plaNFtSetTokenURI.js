@@ -27,13 +27,13 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
             // resolve scanResult
             await Promise.all(scanResult.map(async (value) => {
                 try {
-                    const tokenId = parseInt(value.args['tokenId']._hex);
+                    const tokenId = value.args['tokenId'].toString();
                     const tokenURI = value.args['tokenURI'];
                     if (tokenURI !== '') {
                         const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
                         // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
                         ipfs.getMetaData(url, async (err, data) => {
-                            if (!err) {
+                            if (err === null) {
                                 metadata = JSON.parse(data);
                                 const nftInfoData = {
                                     contractAddr,

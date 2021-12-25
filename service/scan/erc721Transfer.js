@@ -1,7 +1,8 @@
 const Constants = require('../../config/constants');
-const { contractInfo, nftInfo, updateTransaction, insertTransaction } = require('../db/plaNFT')
+const { contractInfo, nftInfo, updateTransaction, insertTransaction, deleteTransaction } = require('../db/plaNFT')
 const eth = require('../../utils/eth')
 const ipfs = require('../network/ipfs')
+const ethers = require("ethers")
 const eventFilter = {
     topics: [Constants.event_topics.ERC721.Transfer]
 }
@@ -27,63 +28,75 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
             await Promise.all(scanResult.map(async (value) => {
                 try {
                     const toAddr = value.args['to'];
-                    const tokenId = value.args['tokenId'].toNumber();
+                    const tokenId = value.args['tokenId'].toString();
                     const eventBlockNumber = value.blockNumber;
                     const txHash = value.transactionHash;
                     const updateParams = { contractAddr, toAddr, tokenId, eventBlockNumber, chain_symbol, txHash }
                     const nftInfoDetails = await nftInfo.getNFTInfoDetails(updateParams);
                     if (nftInfoDetails !== null) {
-                        if (eventBlockNumber > nftInfoDetails.end_block_id) await updateTransaction(nftInfoDetails, updateParams);
-                    } else {
-                        let nftInfoData = {
-                            salesId: 0,
-                            blockNumber: eventBlockNumber,
-                            collection_id,
-                            tokenId,
-                            contractAddr,
-                            toAddr,
-                            description: null,
-                            properties: null,
-                            imageUrl: null,
-                            title: null,
-                            is_frozen: 1,
-                            tokenURI: null,
-                            data: null,
-                            chain_symbol
+                        if (eventBlockNumber > nftInfoDetails.end_block_id) {
+                            toAddr === ethers.constants.AddressZero
+                                ? await deleteTransaction(nftInfoDetails, updateParams)
+                                : await updateTransaction(nftInfoDetails, updateParams);;
                         }
-                        let tokenURI = '';
-                        tokenURI = await contract.tokenURI(tokenId);
-                        if (tokenURI !== '') {
-                            const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
-                            // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
-                            ipfs.getMetaData(url, async (err, data) => {
+                    } else {
+                        if (toAddr !== ethers.constants.AddressZero) {
+                            let nftInfoData = {
+                                salesId: 0,
+                                blockNumber: eventBlockNumber,
+                                collection_id,
+                                tokenId,
+                                contractAddr,
+                                toAddr,
+                                description: null,
+                                properties: null,
+                                imageUrl: null,
+                                animationUrl: null,
+                                title: null,
+                                is_frozen: 1,
+                                tokenURI: null,
+                                data: null,
+                                chain_symbol
+                            }
+                            let tokenURI = await contract.tokenURI(tokenId);
+                            if (tokenURI !== '') {
                                 try {
-                                    if (!err) {
-                                        metadata = JSON.parse(data);
-                                        nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
-                                        nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
-                                        nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
-                                        nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
-                                        nftInfoData.tokenURI = tokenURI;
-                                        nftInfoData.data = data;
-                                        await insertTransaction(nftInfoData);
-                                    }
+                                    const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
+                                    // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
+                                    ipfs.getMetaData(url, async (err, data) => {
+                                        if (err === null) {
+                                            try {
+                                                metadata = JSON.parse(data);
+                                            } catch (error) {
+                                                metadata = data;
+                                                console.log('=======', data)
+                                            }
+                                            nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
+                                            nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
+                                            nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
+                                            nftInfoData.animationUrl = metadata.animation_url !== undefined ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null;
+                                            nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
+                                            nftInfoData.tokenURI = tokenURI;
+                                            nftInfoData.data = data;
+                                            await insertTransaction(nftInfoData);
+                                        }
+                                    })
                                 } catch (error) {
-                                    console.log('getMetaData parse error!')
-                                }
-                            });
-                        } else {
-                            await insertTransaction(nftInfoData);
+                                    console.log('getMetaData error:', error)
+                                };
+                            } else {
+                                await insertTransaction(nftInfoData);
+                            }
                         }
                     }
-                } catch (err) {
-                    console.log('chain_symbol:%s contractAddress:%s tokenID:%d URI query for nonexistent token!', chain_symbol, contractAddr, tokenId)
+                } catch (error) {
+                    console.log('parse data error:%s', error)
                 }
             }));
             await contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
             console.log('Transfer chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
-            console.log('scanTransfer error contractAddr:%s \n', contractAddr)
+            console.log('listen transfer error:%s \n', error)
         }
     });
 }

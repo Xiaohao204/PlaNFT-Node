@@ -8,6 +8,28 @@ const mysql = require('../../config/mysql');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 
+const deleteTransaction = function (nftInfoDetails, updateParams) {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(function (err, connection) {
+            try {
+                connection.beginTransaction();
+                nftInfo.deleteNFTInfo(connection, updateParams, nftInfoDetails);
+                salesInfo.deleteSaleInfo(connection, nftInfoDetails, updateParams);
+                listing.delListing(connection, nftInfoDetails);
+                offer.delOffer(connection, nftInfoDetails, updateParams);
+                listingExpiration.delSale(connection, nftInfoDetails);
+                dutchAuctionSale.delSale(connection, nftInfoDetails);
+                connection.commit();
+            } catch (error) {
+                console.log('updateTransaction error:%s \n', error)
+                connection.rollback();
+            } finally {
+                connection.release();
+            }
+        })
+    });
+}
+
 const updateTransaction = function (nftInfoDetails, updateParams) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
@@ -55,7 +77,8 @@ const plaNFTDB = {
     listing,
     offer,
     updateTransaction,
-    insertTransaction
+    insertTransaction,
+    deleteTransaction
 }
 
 

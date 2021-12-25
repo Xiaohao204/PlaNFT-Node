@@ -1,5 +1,15 @@
 const salesInfo = {}
 
+salesInfo.deleteSaleInfo = function (connection, nftInfoDetails, params) {
+    return new Promise(function (resolve, reject) {
+        const sql = 'delete from sales_info where id = ? and chain_symbol=?';
+        connection.query(sql, [nftInfoDetails.sales_id, params.chain_symbol], function (err, result) {
+            if (err) throw err;
+            resolve(result.changedRows === 1);
+        });
+    })
+}
+
 salesInfo.updateSaleInfo = function (connection, nftInfoDetails, params) {
     return new Promise(function (resolve, reject) {
         const sql = 'update sales_info set user_address = ?, status = 0, sale_method = null, price_starts = null, current_price = null, reserve_price = null, last_traded = now() where id = ? and chain_symbol=?';
