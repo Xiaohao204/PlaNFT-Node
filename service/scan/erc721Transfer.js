@@ -68,8 +68,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                                             try {
                                                 metadata = JSON.parse(data);
                                             } catch (error) {
-                                                metadata = data;
-                                                console.log('=======', data)
+                                                metadata = JSON.parse(data.body);
                                             }
                                             nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
                                             nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
@@ -77,7 +76,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                                             nftInfoData.animationUrl = metadata.animation_url !== undefined ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null;
                                             nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
                                             nftInfoData.tokenURI = tokenURI;
-                                            nftInfoData.data = data;
+                                            nftInfoData.data = metadata.toString();
                                             await insertTransaction(nftInfoData);
                                         }
                                     })

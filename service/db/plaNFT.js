@@ -61,7 +61,7 @@ const insertTransaction = async (nftInfoData) => {
             await nftInfo.insertNFTInfo(connection, nftInfoData);
             connection.commit();
         } catch (error) {
-            console.log('updateTransaction error:%s \n', error)
+            console.log('updateTransaction nftInfoData:%s error:%s \n', nftInfoData, error)
             connection.rollback();
         } finally {
             connection.release();
