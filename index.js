@@ -3,9 +3,7 @@ const chainConstants = require("./config/constants").ETH;
 const eth = require("./utils/eth");
 
 async function startScan() {
-  // Scan every ten seconds
   try {
-    console.log('start Scan at time: ', new Date())
     eth.setNetwork(chainConstants.network)
     const provider = await eth.getProvider();
     await subscribe.startScan(provider, chainConstants.chain_symbol);

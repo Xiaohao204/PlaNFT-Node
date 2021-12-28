@@ -15,18 +15,16 @@ collection.getCollectionInfo = function (params) {
     })
 }
 
-collection.insertNewCollection = function (params) {
+collection.insertNewCollection = function (connection, params) {
     return new Promise(function (resolve, reject) {
-        mysql.getConnection(function (err, connection) {
-            const sql = "INSERT INTO collection(original_name,collection_name,user_address,contract_address,source,type,chain_symbol) values(?,?,?,?,2,3,?) ON DUPLICATE KEY UPDATE updated_at=now()";
-            connection.query(sql, [params.contractName, params.collectionName, params.owner, params.contractAddr, params.chain_symbol], function (err, result) {
-                if (err) throw err;
-                connection.query("SELECT LAST_INSERT_ID();", function (err, data) {
-                    if (err) throw err;
-                    resolve(data[0]['LAST_INSERT_ID()']);
-                });
+        const sql = "INSERT INTO collection(original_name,collection_name,user_address,contract_address,source,type,chain_symbol) values(?,?,?,?,2,3,?) ON DUPLICATE KEY UPDATE updated_at=now()";
+        connection.query(sql, [params.contractName, params.collectionName, params.owner, params.contractAddr, params.chain_symbol], function (err, result) {
+            if (err) reject(err);
+            connection.query("SELECT LAST_INSERT_ID();", function (err, data) {
+                if (err) reject(err);
+                resolve(data[0]['LAST_INSERT_ID()']);
             });
-        })
+        });
     })
 }
 
