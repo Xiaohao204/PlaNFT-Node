@@ -16,7 +16,7 @@ nftInfo.deleteNFTInfo = function (connection, params) {
 nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails) {
     return new Promise(function (resolve, reject) {
         const sql = 'UPDATE nft_info SET end_block_id=?,user_address = ? WHERE contract_address = ? and token_id =? and chain_symbol=?';
-        connection.query(sql, [params.eventBlockNumber, params.toAddr, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
+        connection.query(sql, [params.blockNumber, params.toAddr, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
             if (err) reject(err);
             telegram.changeOwnerNews(params, nftInfoDetails)
             resolve(result);

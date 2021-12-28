@@ -1,4 +1,4 @@
-const contractInfo = require('../db/contractInfo');
+const collection = require('../db/collection');
 const contractPlatform = require('../db/contractPlatform');
 const nftInfo = require('../db/nftInfo');
 const salesInfo = require('../db/salesInfo');
@@ -13,7 +13,7 @@ const deleteTransaction = function (nftInfoDetails, updateParams) {
         mysql.getConnection(function (err, connection) {
             try {
                 connection.beginTransaction();
-                nftInfo.deleteNFTInfo(connection, updateParams, nftInfoDetails);
+                nftInfo.deleteNFTInfo(connection, updateParams);
                 salesInfo.deleteSaleInfo(connection, nftInfoDetails, updateParams);
                 listing.delListing(connection, nftInfoDetails);
                 offer.delOffer(connection, nftInfoDetails, updateParams);
@@ -21,7 +21,7 @@ const deleteTransaction = function (nftInfoDetails, updateParams) {
                 dutchAuctionSale.delSale(connection, nftInfoDetails);
                 connection.commit();
             } catch (error) {
-                console.log('updateTransaction error:%s \n', error)
+                console.log('deleteTransaction error:%s \n', error)
                 connection.rollback();
             } finally {
                 connection.release();
@@ -61,7 +61,7 @@ const insertTransaction = async (nftInfoData) => {
             await nftInfo.insertNFTInfo(connection, nftInfoData);
             connection.commit();
         } catch (error) {
-            console.log('updateTransaction error:%s \n', error)
+            console.log('insertTransaction error:%s \n', error)
             connection.rollback();
         } finally {
             connection.release();
@@ -70,7 +70,7 @@ const insertTransaction = async (nftInfoData) => {
 }
 
 const plaNFTDB = {
-    contractInfo,
+    collection,
     contractPlatform,
     nftInfo,
     salesInfo,
