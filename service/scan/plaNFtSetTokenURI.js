@@ -23,37 +23,44 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
             // listening transfer event
-            const scanResult = await contract.queryFilter(eventFilter, startBlock, endBlock);
+            const scanResult = await contract.queryFilter(eventFilter, 9898120, 9898125);
             // resolve scanResult
             await Promise.all(scanResult.map(async (value) => {
                 try {
                     const tokenId = value.args['tokenId'].toString();
                     const tokenURI = value.args['tokenURI'];
                     if (tokenURI !== '') {
-                        const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
-                        // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
+                        // const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
+                        const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
                         ipfs.getMetaData(url, async (err, data) => {
                             if (err === null) {
-                                metadata = JSON.parse(data);
+                                try {
+                                    metadata = JSON.parse(data);
+                                } catch (error) {
+                                    metadata = JSON.parse(data.body);
+                                }
                                 const nftInfoData = {
                                     contractAddr,
                                     tokenId,
-                                    description: metadata.description !== undefined ? metadata.description.toString() : null,
-                                    properties: metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null,
-                                    imageUrl: metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null,
-                                    animationUrl = metadata.animation_url !== undefined ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null,
-                                    title: metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId,
+                                    description: (metadata.description !== undefined && metadata.description !== null) ? metadata.description.toString() : null,
+                                    properties: (metadata.attributes !== undefined && metadata.attributes !== null) ? JSON.stringify(metadata.attributes) : null,
+                                    imageUrl: (metadata.image !== undefined && metadata.image !== null) ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null,
+                                    animationUrl: (metadata.animation_url !== undefined && metadata.animation_url !== null) ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null,
+                                    title: (metadata.name !== undefined && metadata.name !== null) ? metadata.name : contract_name + " #" + tokenId,
                                     tokenURI,
                                     is_frozen: 1,
-                                    data: data,
+                                    data: metadata.toString(),
                                     chain_symbol
                                 }
+                                console.log(nftInfoData)
                                 await nftInfo.updateNFTInfoBySetTokenURI(nftInfoData);
+                            } else {
+                                console.log(err)
                             }
                         });
                     }
                 } catch (error) {
-                    console.log('chainSymbol:%s SetTokenUri error:%s', chain_symbol, tokenURI)
+                    console.log('chainSymbol:%s SetTokenUri error:%s', chain_symbol, error)
                 }
             }));
             await contractPlatform.setLastNumber([endBlock, contractAddr, startBlock, chain_symbol]);

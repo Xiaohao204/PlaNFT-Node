@@ -62,24 +62,28 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                             let tokenURI = await contract.tokenURI(tokenId);
                             if (tokenURI !== '') {
                                 try {
-                                    const url = tokenURI.replace("ipfs://", Constants.ipfs.main);
-                                    // const url = tokenURI.replace("ipfs://", Constants.ipfs.test);
+                                    const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
+                                    // const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
                                     ipfs.getMetaData(url, async (err, data) => {
                                         if (err === null) {
+                                            let metadata = null;
                                             try {
                                                 metadata = JSON.parse(data);
                                             } catch (error) {
-                                                metadata = JSON.parse(data.body);
+                                                try {
+                                                    metadata = JSON.parse(data.body);
+                                                } catch (error) {
+                                                }
                                             }
-                                            nftInfoData.description = metadata.description !== undefined ? metadata.description.toString() : null;
-                                            nftInfoData.properties = metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null;
-                                            nftInfoData.imageUrl = metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
-                                            nftInfoData.animationUrl = metadata.animation_url !== undefined ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null;
-                                            nftInfoData.title = metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId;
-                                            nftInfoData.tokenURI = tokenURI;
-                                            nftInfoData.data = metadata.toString();
-                                            if (nftInfoData.animationUrl !== null) {
-                                                nftInfoData.type = 4;
+                                            if (metadata != null) {
+                                                nftInfoData.description = (metadata.description !== undefined && metadata.description !== null) ? metadata.description.toString() : null;
+                                                nftInfoData.properties = (metadata.attributes !== undefined && metadata.attributes !== null) ? JSON.stringify(metadata.attributes) : null;
+                                                nftInfoData.imageUrl = (metadata.image !== undefined && metadata.image !== null) ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null;
+                                                nftInfoData.animationUrl = (metadata.animation_url !== undefined && metadata.animation_url !== null) ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null;
+                                                nftInfoData.title = (metadata.name !== undefined && metadata.name !== null) ? metadata.name : contract_name + " #" + tokenId;
+                                                nftInfoData.tokenURI = tokenURI;
+                                                nftInfoData.data = metadata.toString();
+                                                if (nftInfoData.animationUrl !== null) nftInfoData.type = 4;
                                             }
                                             await insertTransaction(nftInfoData);
                                         }
@@ -97,7 +101,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                 }
             }));
             await contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
-            console.log('Transfer chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
+            // console.log('Transfer chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             console.log('listen transfer error:%s \n', error)
         }
