@@ -4,44 +4,54 @@ const plaNFTDB = require('../db/plaNFT')
 const eth = require('../../utils/eth')
 const ipfs = require('../network/ipfs')
 const ethers = require("ethers")
-const eventFilter = {
-    fromBlock: 0,
-    toBlock: 50,
-    topics: [Constants.event_topics.ERC721.Transfer]
-}
 
 const interfaceId_erc721 = '0x80ac58cd';
 const scanTask = {}
 
 scanTask.startScan = async function (provider, chain_symbol, type) {
     const blockInfo = await plaNFTDB.scanNumber.getBlockInfo([chain_symbol, type]);
-    await provider.getLogs(eventFilter).then(res => { console.log(res.length) })
-    // provider.on(eventFilter, async (result) => {
-    // try {
-    //     const contractAddr = result.address;
-    //     const blockNumber = result.blockNumber;
-    //     const txHash = result.transactionHash;
-    //     const contract = await eth.connContract(contractAddr);
-    //     const contractDetails = await plaNFTDB.contractInfo.getContractInfo({ contractAddr, chain_symbol });
-    //     if (contractDetails != null) {
-    //         await dataParse(contract, contractAddr, blockNumber, txHash,
-    //             contractDetails.contract_name, contractDetails.collection_id, contractDetails.owner, chain_symbol, Constants.sourceType.database);
-    //     } else {
-    //         try {
-    //             const isErc721 = await contract.supportsInterface(interfaceId_erc721).then(res => { return res });
-    //             if (isErc721) {
-    //                 const contractName = await contract.name().then(res => { return res });
-    //                 const owner = await contract.owner().then(res => { return res });
-    //                 await dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
-    //             }
-    //         } catch (error) {
-    //             // console.log('contractAddr:%s not erc721!', result.address)
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.log('startScan error:%s!', error)
-    // }
-    // })
+    for (let fromBlock = blockInfo.currentBlock; fromBlock < blockInfo.endBlock; fromBlock += Constants.max_scan) {
+        const toBlock = fromBlock + Constants.max_scan;
+        const eventFilter = {
+            fromBlock,
+            toBlock,
+            topics: [Constants.event_topics.ERC721.Transfer]
+        }
+        try {
+            await provider.getLogs(eventFilter).then(async (res) => {
+                console.log(fromBlock, toBlock, res.length)
+                await Promise.all(res.map(async (result) => {
+                    try {
+                        const contractAddr = result.address;
+                        const blockNumber = result.blockNumber;
+                        const txHash = result.transactionHash;
+                        const contract = await eth.connContract(contractAddr);
+                        const contractDetails = await plaNFTDB.contractInfo.getContractInfo({ contractAddr, chain_symbol });
+                        if (contractDetails != null) {
+                            await dataParse(contract, contractAddr, blockNumber, txHash,
+                                contractDetails.contract_name, contractDetails.collection_id, contractDetails.owner, chain_symbol, Constants.sourceType.database);
+                        } else {
+                            try {
+                                const isErc721 = await contract.supportsInterface(interfaceId_erc721).then(res => { return res });
+                                if (isErc721) {
+                                    const contractName = await contract.name().then(res => { return res });
+                                    const owner = await contract.owner().then(res => { return res });
+                                    await dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
+                                }
+                            } catch (error) {
+                                console.log('contractAddr:%s not erc721!', result.address)
+                            }
+                        }
+                    } catch (error) {
+                        console.log('startScan error:%s!', error)
+                    }
+                }))
+            })
+            await plaNFTDB.scanNumber.setBlockInfo([toBlock, chain_symbol, type, fromBlock]);
+        } catch (error) {
+            console.log('=====', error)
+        }
+    }
 };
 
 async function dataParse(contract, contractAddr, blockNumber, txHash, contractName, collection_id, owner, chain_symbol, type) {

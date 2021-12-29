@@ -15,11 +15,11 @@ scanNumber.getBlockInfo = function (params) {
     })
 }
 
-collection.setBlockInfo = function (params) {
+scanNumber.setBlockInfo = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "update scanNumber set currentBlock=? where type = ? and chain_symbol=?";
-            connection.query(sql, [params.currentBlock, params.type, params.chain_symbol], function (err, result) {
+            const sql = "update scanNumber set currentBlock=? where chain_symbol=? and type = ? and currentBlock=?";
+            connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
                 resolve(result);
             });
