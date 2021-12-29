@@ -23,7 +23,7 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
             // listening transfer event
-            const scanResult = await contract.queryFilter(eventFilter, 9898120, 9898125);
+            const scanResult = await contract.queryFilter(eventFilter, startBlock, endBlock);
             // resolve scanResult
             await Promise.all(scanResult.map(async (value) => {
                 try {
@@ -52,6 +52,7 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
                                     data: metadata.toString(),
                                     chain_symbol
                                 }
+                                console.log(nftInfoData)
                                 await nftInfo.updateNFTInfoBySetTokenURI(nftInfoData);
                             } else {
                                 console.log(err)
