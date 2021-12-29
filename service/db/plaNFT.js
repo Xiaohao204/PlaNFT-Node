@@ -1,3 +1,5 @@
+const mysql = require('../../config/mysql');
+const scanNumber = require('../db/scanNumber');
 const collection = require('../db/collection');
 const contractInfo = require('../db/contractInfo');
 const contractPlatform = require('../db/contractPlatform');
@@ -5,7 +7,6 @@ const nftInfo = require('../db/nftInfo');
 const salesInfo = require('../db/salesInfo');
 const listing = require('../db/listing');
 const offer = require('../db/offer');
-const mysql = require('../../config/mysql');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 
@@ -90,6 +91,7 @@ const insertCollectionTransaction = async (insertParams) => {
 }
 
 const plaNFTDB = {
+    scanNumber,
     collection,
     contractInfo,
     contractPlatform,

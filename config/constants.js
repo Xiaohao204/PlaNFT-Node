@@ -1,6 +1,7 @@
 module.exports = {
     ETH: {
-        network: "https://speedy-nodes-nyc.moralis.io/6bd8d0732c1d9c3760f1d506/eth/mainnet",
+        // network: "https://speedy-nodes-nyc.moralis.io/6bd8d0732c1d9c3760f1d506/eth/mainnet",
+        network: "http://10.0.0.89:18545/",
         chain_symbol: 'ETH',
     },
     BSC: {
