@@ -41,6 +41,7 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
                                     description: metadata.description !== undefined ? metadata.description.toString() : null,
                                     properties: metadata.attributes !== undefined ? JSON.stringify(metadata.attributes) : null,
                                     imageUrl: metadata.image !== undefined ? metadata.image.toString().replace("ipfs://", Constants.ipfs.main) : null,
+                                    animationUrl = metadata.animation_url !== undefined ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null,
                                     title: metadata.name !== undefined ? metadata.name : contract_name + " #" + tokenId,
                                     tokenURI,
                                     is_frozen: 1,
