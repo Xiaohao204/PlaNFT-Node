@@ -52,7 +52,6 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
                                     data: metadata.toString(),
                                     chain_symbol
                                 }
-                                console.log(nftInfoData)
                                 await nftInfo.updateNFTInfoBySetTokenURI(nftInfoData);
                             } else {
                                 console.log(err)

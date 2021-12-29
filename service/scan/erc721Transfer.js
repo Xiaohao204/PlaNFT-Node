@@ -101,7 +101,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                 }
             }));
             await contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
-            // console.log('Transfer chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
+            console.log('Transfer chainSymbol:%s contractAddr:%s startBlockId:%d endBlockId:%d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             console.log('listen transfer error:%s \n', error)
         }
