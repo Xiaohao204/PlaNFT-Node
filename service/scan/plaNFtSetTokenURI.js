@@ -49,7 +49,7 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
                                     title: (metadata.name !== undefined && metadata.name !== null) ? metadata.name : contract_name + " #" + tokenId,
                                     tokenURI,
                                     is_frozen: 1,
-                                    data: metadata.toString(),
+                                    data: JSON.stringify(metadata),
                                     chain_symbol
                                 }
                                 console.log(nftInfoData)
