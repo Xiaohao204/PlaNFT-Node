@@ -16,9 +16,7 @@ module.exports = {
         chain_symbol: 'ARBITRUM',
     },
     FANTOM: {
-        network: [
-            "https://rpc.testnet.fantom.network/"
-        ],
+        network: "https://rpc.testnet.fantom.network/",
         chain_symbol: 'FANTOM',
     },
     AVAX: {
@@ -26,9 +24,7 @@ module.exports = {
         chain_symbol: 'AVAX',
     },
     AURORA: {
-        network: [
-            "https://testnet.aurora.dev"
-        ],
+        network: "https://testnet.aurora.dev",
         chain_symbol: 'AURORA',
     },
     ipfs: {
