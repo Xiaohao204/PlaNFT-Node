@@ -11,24 +11,13 @@ async function startScan() {
   schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
       console.log('start Scan at time: ', new Date())
-      await eth.setApiList(chainConstants.network);
-      const provider = await eth.getProvider();
+      const provider = await eth.getProvider(chainConstants.network);
       const transferList = await contractInfo.getTransferList(chainConstants.chain_symbol);
       const setTokenURIList = await contractPlatform.getSetTokenURIList(chainConstants.chain_symbol);
       erc721Transfer.startScan(provider, transferList, chainConstants.chain_symbol);
       plaNFtSetTokenURI.startScan(provider, setTokenURIList, chainConstants.chain_symbol);
     } catch (error) {
       console.log('startScan error:%s \n', error)
-    }
-  });
-
-  // Scan every ten seconds
-  schedule.scheduleJob('0 */5 * * * *', async () => {
-    try {
-      console.log('delete provider cache: ', new Date())
-      await eth.deleteProvider();
-    } catch (error) {
-      console.log('delete provider cache:%s \n', error)
     }
   });
 }

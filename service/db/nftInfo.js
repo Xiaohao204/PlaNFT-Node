@@ -27,8 +27,8 @@ nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails) {
 nftInfo.updateNFTInfoBySetTokenURI = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,animation_url=?,title=?,token_uri=?,is_frozen=?,metadata=? WHERE contract_address = ? and token_id =? and chain_symbol=?';
-            connection.query(sql, [params.description, params.properties, params.imageUrl, params.animationUrl, params.title, params.tokenURI, params.is_frozen, params.data, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
+            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,animation_url=?,title=?,token_uri=?,is_frozen=? WHERE contract_address = ? and token_id =? and chain_symbol=?';
+            connection.query(sql, [params.description, params.properties, params.imageUrl, params.animationUrl, params.title, params.tokenURI, params.is_frozen, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
                 if (err) reject(err);
                 resolve(result);
             });
@@ -39,9 +39,9 @@ nftInfo.updateNFTInfoBySetTokenURI = function (params) {
 
 nftInfo.insertNFTInfo = function (connection, params) {
     return new Promise(function (resolve, reject) {
-        const sql = 'INSERT into nft_info (sales_id,end_block_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,animation_url,title,is_frozen,token_uri,metadata,chain_symbol) Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        const sql = 'INSERT into nft_info (sales_id,end_block_id,collection_id,token_id,contract_address,user_address,description,properties,image_url,animation_url,title,is_frozen,token_uri,chain_symbol) Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
         connection.query(sql, [params.salesId, params.blockNumber, params.collection_id, params.tokenId, params.contractAddr, params.toAddr,
-        params.description, params.properties, params.imageUrl, params.animationUrl, params.title, params.is_frozen, params.tokenURI, params.data, params.chain_symbol], function (err, result) {
+        params.description, params.properties, params.imageUrl, params.animationUrl, params.title, params.is_frozen, params.tokenURI, params.chain_symbol], function (err, result) {
             if (err) reject(err);
             resolve(result);
         });

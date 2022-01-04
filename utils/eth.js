@@ -2,44 +2,24 @@ const Ethers = require("ethers")
 const erc721_ABI = require("../contracts/erc721.json").abi
 
 const eth = {};
-let provider = {};
+let provider = undefined;
 let contracts = {};
-let apiList = undefined;
 async function connTransferContract(address, abi) {
     if (contracts[address] === undefined) {
-        contracts[address] = new Ethers.Contract(address, abi, await eth.getProvider());
+        contracts[address] = new Ethers.Contract(address, abi, provider);
     }
     return contracts[address]
 }
 
-eth.getProvider = async function () {
-    const index = getRandomInt(apiList.length);
-    if (provider[index] === undefined) {
-        provider[index] = new Ethers.providers.JsonRpcProvider(apiList[index]);
+eth.getProvider = async function (network) {
+    if (provider === undefined) {
+        provider = new Ethers.providers.JsonRpcProvider(network);
     }
-    return provider[index];
-}
-
-eth.setApiList = async function (apis) {
-    apiList = apis
-}
-
-eth.deleteProvider = async function () {
-    provider = {}
+    return provider;
 }
 
 eth.instanceContracts = async function (contractAddress) {
     return await connTransferContract(contractAddress, erc721_ABI);
-}
-
-eth.getBlockTime = async function (blockHash) {
-    const providerNow = await eth.getProvider();
-    const res = await providerNow.getBlock(blockHash);
-    return res.timestamp * 1000;
-}
-
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
 }
 
 module.exports = eth;
