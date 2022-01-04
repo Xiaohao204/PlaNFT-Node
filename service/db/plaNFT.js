@@ -9,6 +9,7 @@ const listing = require('../db/listing');
 const offer = require('../db/offer');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
+const illegalErc721 = require('../db/illegalErc721');
 
 const deleteTransaction = function (nftInfoDetails, deleteParams) {
     return new Promise(function (resolve, reject) {
@@ -99,6 +100,7 @@ const plaNFTDB = {
     salesInfo,
     listing,
     offer,
+    illegalErc721,
     updateTransaction,
     insertNftTransaction,
     insertCollectionTransaction,
