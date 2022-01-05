@@ -10,7 +10,8 @@ module.exports = {
         chain_symbol: 'BSC',
     },
     POLYGON: {
-        network: "https://planft:Planft20211231@apis.ankr.com/8e2edc9e5f9f494287e7aab41f22458a/46d7ea6c80dc52f7d19bf60d4c4158c9/polygon/full/main",
+        // network: "https://planft:Planft20211231@apis.ankr.com/8e2edc9e5f9f494287e7aab41f22458a/46d7ea6c80dc52f7d19bf60d4c4158c9/polygon/full/main",
+        network: "https://polygon-rpc.com/",
         chain_symbol: 'POLYGON',
     },
     ARBITRUM: {

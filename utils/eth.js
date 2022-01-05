@@ -6,9 +6,9 @@ const eth = {};
 let provider = undefined;
 let contracts = {};
 
-eth.getProvider = async function (newNetwork) {
+eth.getProvider = async function (network) {
     if (provider === undefined) {
-        provider = new Ethers.providers.Web3Provider(new web3.providers.HttpProvider(newNetwork));
+        provider = new Ethers.providers.Web3Provider(new web3.providers.HttpProvider(network));
     }
     return provider;
 }

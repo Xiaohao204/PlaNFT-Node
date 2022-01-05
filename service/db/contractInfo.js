@@ -25,4 +25,17 @@ contractInfo.insertNewContract = function (connection, params) {
     })
 }
 
+contractInfo.insertNewContract_2 = function (params) {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(function (err, connection) {
+            const sql = "INSERT INTO contract_info(address,collection_id,contract_name,owner,type,chain_symbol,end_block_id) values(?,?,?,?,1,?,?) ON DUPLICATE KEY UPDATE updated_at=now()";
+            connection.query(sql, params, function (err, result) {
+                if (err) reject(err);
+                resolve(result.changedRows === 1);
+            });
+            connection.release();
+        })
+    })
+}
+
 module.exports = contractInfo

@@ -2,6 +2,7 @@ const mysql = require('../../config/mysql');
 const scanNumber = require('../db/scanNumber');
 const collection = require('../db/collection');
 const contractInfo = require('../db/contractInfo');
+const contractCache = require('../db/contractCache');
 const contractPlatform = require('../db/contractPlatform');
 const nftInfo = require('../db/nftInfo');
 const salesInfo = require('../db/salesInfo');
@@ -10,6 +11,7 @@ const offer = require('../db/offer');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 const illegalErc721 = require('../db/illegalErc721');
+const erc721Transfer = require('../db/erc721Transfer');
 
 const deleteTransaction = function (nftInfoDetails, deleteParams) {
     return new Promise(function (resolve, reject) {
@@ -95,11 +97,13 @@ const plaNFTDB = {
     scanNumber,
     collection,
     contractInfo,
+    contractCache,
     contractPlatform,
     nftInfo,
     salesInfo,
     listing,
     offer,
+    erc721Transfer,
     illegalErc721,
     updateTransaction,
     insertNftTransaction,
