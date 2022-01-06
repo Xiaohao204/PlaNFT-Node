@@ -18,6 +18,7 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
             const nftInfoDetails = await plaNFTDB.nftInfo.getNFTInfoDetails(updateParams);
             if (nftInfoDetails !== null) {
                 if (blockNumber > nftInfoDetails.end_block_id) {
+                    console.log("%d %s %s", blockNumber, contractAddr, tokenId)
                     toAddr === ethers.constants.AddressZero
                         ? await plaNFTDB.deleteTransaction(nftInfoDetails, updateParams)
                         : await plaNFTDB.updateTransaction(nftInfoDetails, updateParams);
@@ -50,7 +51,6 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
                     title: null,
                     is_frozen: 1,
                     tokenURI: null,
-                    data: null,
                     type: 3,
                     chain_symbol
                 }
@@ -68,8 +68,7 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
                                     try {
                                         metadata = JSON.parse(data.body);
                                     } catch (error) {
-                                        telegram.warningNews(Constants.telegram.userName, 'metadata to json error', JSON.stringify(error))
-                                        console.log('metadata to json error:%s!', error.toString())
+                                        telegram.warningNews(Constants.telegram.userName, blockNumber + ' ' + chain_symbol + ' metadata to json error', error.toString())
                                     }
                                 }
                                 if (metadata != null) {
@@ -79,22 +78,23 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
                                     nftInfoData.animationUrl = (metadata.animation_url !== undefined && metadata.animation_url !== null) ? metadata.animation_url.toString().replace("ipfs://", Constants.ipfs.main) : null;
                                     nftInfoData.title = (metadata.name !== undefined && metadata.name !== null) ? metadata.name : contractName + " #" + tokenId;
                                     nftInfoData.tokenURI = tokenURI;
-                                    nftInfoData.data = JSON.stringify(metadata);
                                     if (nftInfoData.animationUrl !== null) nftInfoData.type = 4;
                                 }
                             }
+                            console.log("%d %s %s", blockNumber, contractAddr, tokenId)
                             await plaNFTDB.insertNftTransaction(nftInfoData);
                         })
                     } else {
+                        console.log("%d %s %s", blockNumber, contractAddr, tokenId)
                         await plaNFTDB.insertNftTransaction(nftInfoData);
                     }
                 } catch (error) {
+                    console.log("%d %s %s", blockNumber, contractAddr, tokenId)
                     await plaNFTDB.insertNftTransaction(nftInfoData);
                 };
             }
         } catch (error) {
-            telegram.warningNews(Constants.telegram.userName, 'dataParse error', error.toString())
-            console.log('dataParse error:%s!', JSON.stringify(error))
+            telegram.warningNews(Constants.telegram.userName, blockNumber + ' ' + chain_symbol + ' dataParse error', error.toString())
         }
     }))
 }

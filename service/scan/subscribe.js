@@ -29,23 +29,21 @@ subscribe.startScan = async function (provider, chain_symbol) {
                         if (isErc721) {
                             const contractName = await contract.name().then(res => { return res });
                             const owner = await contract.owner().then(res => { return res });
+                            console.log('%d %s new contract:%s', blockNumber, chain_symbol, contractAddr)
                             await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
                         }
                     } catch (error) {
                         if (error.code === 'UNPREDICTABLE_GAS_LIMIT' || error.code === 'CALL_EXCEPTION') {
+                            console.log('%d %s illegal contract:%s', blockNumber, chain_symbol, contractAddr)
                             await plaNFTDB.illegalErc721.insertNewAddress({ contractAddr, chain_symbol });
                         } else {
-                            telegram.warningNews(Constants.telegram.userName, 'call supportsTnterface error', JSON.stringify(error))
-                            console.log('call supportsInterface error:%s!', JSON.stringify(error))
+                            telegram.warningNews(Constants.telegram.userName, blockNumber + ' ' + chain_symbol + " call supportsTnterface error", error.toString())
                         }
                     }
-                } else {
-                    // console.log('blockNumber:%d contractAddr:%s is illegal erc721!', blockNumber, contractAddr)
                 }
             }
         } catch (error) {
-            telegram.warningNews(Constants.telegram.userName, 'subscribe error', JSON.stringify(error))
-            console.log('subscribe error:%s!', JSON.stringify(error))
+            telegram.warningNews(Constants.telegram.userName, result.blockNumber + ' ' + chain_symbol + " subscribe error", error.toString())
         }
     })
 };

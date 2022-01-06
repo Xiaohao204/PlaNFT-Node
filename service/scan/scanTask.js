@@ -34,23 +34,21 @@ scanTask.startScan = async function (provider, chain_symbol, type) {
                                 if (isErc721) {
                                     const contractName = await contract.name().then(res => { return res });
                                     const owner = await contract.owner().then(res => { return res });
+                                    console.log('%d %s new contract:%s', blockNumber, chain_symbol, contractAddr)
                                     await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
                                 }
                             } catch (error) {
                                 if (error.code === 'UNPREDICTABLE_GAS_LIMIT' || error.code === 'CALL_EXCEPTION') {
+                                    console.log('%d %s illegal contract:%s', blockNumber, chain_symbol, contractAddr)
                                     await plaNFTDB.illegalErc721.insertNewAddress({ contractAddr, chain_symbol });
                                 } else {
-                                    telegram.warningNews(Constants.telegram.userName, 'call supportsTnterface error', error.toString())
-                                    console.log('call supportsInterface error:%s!', JSON.stringify(error))
+                                    telegram.warningNews(Constants.telegram.userName, blockNumber + ' ' + chain_symbol + " call supportsTnterface error", error.toString())
                                 }
                             }
-                        } else {
-                            console.log('contractAddr:%s is illegal erc721!', contractAddr)
                         }
                     }
                 } catch (error) {
-                    telegram.warningNews(Constants.telegram.userName, 'startScan error', error.toString())
-                    console.log('startScan error:%s!', JSON.stringify(error))
+                    telegram.warningNews(Constants.telegram.userName, blockNumber + ' ' + chain_symbol + " startScan error", error.toString())
                 }
             }))
         })
