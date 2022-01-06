@@ -35,4 +35,38 @@ telegram.changeOwnerNews = function (params, nftInfoDetails) {
     req.end()
 };
 
+telegram.warningNews = function (userName, type, message) {
+
+    const data = new TextEncoder().encode(
+        JSON.stringify({
+            userName,
+            type,
+            message
+        })
+    )
+
+    const options = {
+        hostname: '10.0.0.18',
+        port: 6699,
+        path: '/telegram/warningNews',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length
+        }
+    }
+
+    const req = http.request(options, res => {
+        res.on('data', data => {
+            process.stdout.write(data)
+        })
+    })
+    req.on('error', error => {
+        console.error(error)
+    })
+    req.write(data)
+    req.end()
+};
+
+
 module.exports = telegram

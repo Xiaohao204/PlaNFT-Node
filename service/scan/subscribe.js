@@ -1,6 +1,7 @@
 const Constants = require('../../config/constants');
 const dataUtils = require('./dataUtils');
 const plaNFTDB = require('../db/plaNFT')
+const telegram = require('../network/telegram')
 const eth = require('../../utils/eth')
 const eventFilter = {
     topics: [Constants.event_topics.ERC721.Transfer]
@@ -31,10 +32,11 @@ subscribe.startScan = async function (provider, chain_symbol) {
                             await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
                         }
                     } catch (error) {
-                        if (error.code === 'UNPREDICTABLE_GAS_LIMIT') {
+                        if (error.code === 'UNPREDICTABLE_GAS_LIMIT' || error.code === 'CALL_EXCEPTION') {
                             await plaNFTDB.illegalErc721.insertNewAddress({ contractAddr, chain_symbol });
                         } else {
-                            console.log(error)
+                            telegram.warningNews(Constants.telegram.userName, 'call supportsTnterface error', JSON.stringify(error))
+                            console.log('call supportsInterface error:%s!', JSON.stringify(error))
                         }
                     }
                 } else {
@@ -42,7 +44,8 @@ subscribe.startScan = async function (provider, chain_symbol) {
                 }
             }
         } catch (error) {
-            console.log('subscribe error:%s!', error)
+            telegram.warningNews(Constants.telegram.userName, 'subscribe error', JSON.stringify(error))
+            console.log('subscribe error:%s!', JSON.stringify(error))
         }
     })
 };

@@ -1,8 +1,8 @@
 const Constants = require('../../config/constants');
-// const { contractInfo, collection, nftInfo, updateTransaction, insertTransaction, deleteTransaction } = require('../db/plaNFT')
 const plaNFTDB = require('../db/plaNFT')
 const ipfs = require('../network/ipfs')
 const ethers = require("ethers")
+const telegram = require('../network/telegram')
 const eventFilter = {
     topics: [Constants.event_topics.ERC721.Transfer]
 }
@@ -68,7 +68,8 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
                                     try {
                                         metadata = JSON.parse(data.body);
                                     } catch (error) {
-                                        console.log('metadata to json error:', error)
+                                        telegram.warningNews(Constants.telegram.userName, 'metadata to json error', JSON.stringify(error))
+                                        console.log('metadata to json error:%s!', error.toString())
                                     }
                                 }
                                 if (metadata != null) {
@@ -92,7 +93,8 @@ dataUtils.dataParse = async function (contract, contractAddr, blockNumber, txHas
                 };
             }
         } catch (error) {
-            console.log('dataParse error:%s!', error)
+            telegram.warningNews(Constants.telegram.userName, 'dataParse error', error.toString())
+            console.log('dataParse error:%s!', JSON.stringify(error))
         }
     }))
 }

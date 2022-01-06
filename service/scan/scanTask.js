@@ -1,6 +1,6 @@
 const Constants = require('../../config/constants');
 const dataUtils = require('./dataUtils');
-// const { contractInfo, collection, nftInfo, updateTransaction, insertTransaction, deleteTransaction } = require('../db/plaNFT')
+const telegram = require('../network/telegram')
 const plaNFTDB = require('../db/plaNFT')
 const eth = require('../../utils/eth')
 
@@ -37,10 +37,11 @@ scanTask.startScan = async function (provider, chain_symbol, type) {
                                     await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
                                 }
                             } catch (error) {
-                                if (error.code === 'UNPREDICTABLE_GAS_LIMIT') {
+                                if (error.code === 'UNPREDICTABLE_GAS_LIMIT' || error.code === 'CALL_EXCEPTION') {
                                     await plaNFTDB.illegalErc721.insertNewAddress({ contractAddr, chain_symbol });
                                 } else {
-                                    console.log(JSON.stringify(error))
+                                    telegram.warningNews(Constants.telegram.userName, 'call supportsTnterface error', error.toString())
+                                    console.log('call supportsInterface error:%s!', JSON.stringify(error))
                                 }
                             }
                         } else {
@@ -48,7 +49,8 @@ scanTask.startScan = async function (provider, chain_symbol, type) {
                         }
                     }
                 } catch (error) {
-                    console.log('startScan error:%s!', error)
+                    telegram.warningNews(Constants.telegram.userName, 'startScan error', error.toString())
+                    console.log('startScan error:%s!', JSON.stringify(error))
                 }
             }))
         })
