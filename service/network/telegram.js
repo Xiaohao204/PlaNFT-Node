@@ -1,4 +1,5 @@
 const http = require('http')
+const Constants = require('../../config/constants');
 const telegram = {}
 
 telegram.changeOwnerNews = function (params, nftInfoDetails) {
@@ -13,8 +14,7 @@ telegram.changeOwnerNews = function (params, nftInfoDetails) {
     )
 
     const options = {
-        hostname: '10.0.0.18',
-        port: 6699,
+        hostname: Constants.telegram.host,
         path: '/telegram/changeOwnerNews',
         method: 'POST',
         headers: {
@@ -46,8 +46,7 @@ telegram.warningNews = function (userName, type, message) {
     )
 
     const options = {
-        hostname: '10.0.0.18',
-        port: 6699,
+        hostname: Constants.telegram.host,
         path: '/telegram/warningNews',
         method: 'POST',
         headers: {
