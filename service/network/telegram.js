@@ -1,4 +1,4 @@
-const http = require('http')
+const https = require('https')
 const Constants = require('../../config/constants');
 const telegram = {}
 
@@ -23,7 +23,7 @@ telegram.changeOwnerNews = function (params, nftInfoDetails) {
         }
     }
 
-    const req = http.request(options, res => {
+    const req = https.request(options, res => {
         res.on('data', data => {
             process.stdout.write(data)
         })
@@ -55,7 +55,7 @@ telegram.warningNews = function (userName, type, message) {
         }
     }
 
-    const req = http.request(options, res => {
+    const req = https.request(options, res => {
         res.on('data', data => {
             process.stdout.write(data)
         })

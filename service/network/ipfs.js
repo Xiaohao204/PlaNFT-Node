@@ -12,7 +12,7 @@ ipfs.getMetaData = function (url, callback) {
         } else {
             if (error != null) {
                 const msg = error.toString();
-                if (!msg.startsWith('Error: Invalid URI ') && !msg.startsWith('Error: connect ECONNREFUSED') && !msg.startsWith('Error: socket hang up')) {
+                if (!msg.startsWith('Error: Invalid URI ') && !msg.startsWith('Error: connect ECONNREFUSED') && !msg.startsWith('Error: socket hang up') && !msg.startsWith('Error: connect ETIMEDOUT')) {
                     telegram.warningNews(Constants.telegram.userName, url + " ipfs error", msg)
                 }
             }
