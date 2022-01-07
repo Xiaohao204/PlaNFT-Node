@@ -25,7 +25,7 @@ telegram.changeOwnerNews = function (params, nftInfoDetails) {
 
     const req = https.request(options, res => {
         res.on('data', data => {
-            process.stdout.write(data)
+            // process.stdout.write(data)
         })
     })
     req.on('error', error => {
@@ -57,7 +57,7 @@ telegram.warningNews = function (userName, type, message) {
 
     const req = https.request(options, res => {
         res.on('data', data => {
-            process.stdout.write(data)
+            // process.stdout.write(data)
         })
     })
     req.on('error', error => {

@@ -8,7 +8,7 @@ contractInfo.getContractInfo = function (params) {
             const sql = "SELECT end_block_id,collection_id,contract_name FROM contract_info where address = ? and chain_symbol=?";
             connection.query(sql, [params.contractAddr, params.chain_symbol], function (err, result) {
                 if (err) reject(err);
-                resolve(result[0]);
+                resolve(result.length === 0 ? null : result[0]);
             });
             connection.release();
         })
@@ -31,7 +31,7 @@ contractInfo.getTransferList = function (params) {
             const sql = "SELECT address from contract_info where chain_symbol=? order by end_block_id";
             connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
-                result.length === 0 ? resolve(result) : resolve(result.map(obj => obj.address))
+                resolve(result.length === 0 ? [] : resolve(result.map(obj => obj.address)))
             });
             connection.release();
         })
