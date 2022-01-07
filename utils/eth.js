@@ -20,6 +20,17 @@ eth.connContract = async function (address) {
     return contracts[address]
 }
 
+async function connTransferContract(address, abi) {
+    if (contracts[address] === undefined) {
+        contracts[address] = new Ethers.Contract(address, abi, provider);
+    }
+    return contracts[address]
+}
+
+eth.instanceContracts = async function (contractAddress) {
+    return await connTransferContract(contractAddress, erc721_ABI);
+}
+
 module.exports = eth;
 
 

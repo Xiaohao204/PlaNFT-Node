@@ -49,10 +49,9 @@ module.exports = {
         chain: 0,
         database: 1
     },
-    max_scan: 30,
+    max_scan: 50,
     telegram: {
         userName: 'BoHaos',
-        host: 'www.planft.com',
-        port: 443
+        host: 'www.planft.com'
     }
 }

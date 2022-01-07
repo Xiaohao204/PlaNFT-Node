@@ -1,5 +1,4 @@
 const Constants = require('../../config/constants');
-const dataUtils = require('./dataUtils');
 const plaNFTDB = require('../db/plaNFT')
 const telegram = require('../network/telegram')
 const eth = require('../../utils/eth')
@@ -15,22 +14,27 @@ subscribe.startScan = async function (provider, chain_symbol) {
         try {
             const contractAddr = result.address;
             const blockNumber = result.blockNumber;
-            const txHash = result.transactionHash;
             const contract = await eth.connContract(contractAddr);
-            const contractDetails = await plaNFTDB.contractInfo.getContractInfo({ contractAddr, chain_symbol });
-            if (contractDetails != null) {
-                await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash,
-                    contractDetails.contract_name, contractDetails.collection_id, contractDetails.owner, chain_symbol, Constants.sourceType.database);
-            } else {
-                const illegalFlag = await plaNFTDB.illegalErc721.getAddress({ contractAddr, chain_symbol });
-                if (!illegalFlag) {
+            const illegalFlag = await plaNFTDB.illegalErc721.getAddress({ contractAddr, chain_symbol });
+            if (!illegalFlag) {
+                const contractDetails = await plaNFTDB.contractInfo.getContractInfo({ contractAddr, chain_symbol });
+                if (contractDetails === null) {
                     try {
                         const isErc721 = await contract.supportsInterface(interfaceId_erc721).then(res => { return res });
                         if (isErc721) {
                             const contractName = await contract.name().then(res => { return res });
                             const owner = await contract.owner().then(res => { return res });
+                            const collectionParams = {
+                                contractName,
+                                collection_id: 0,
+                                collectionName: contractName + '-' + contractAddr,
+                                owner,
+                                contractAddr,
+                                chain_symbol,
+                                blockNumber
+                            };
                             console.log('%d %s new contract:%s', blockNumber, chain_symbol, contractAddr)
-                            await dataUtils.dataParse(contract, contractAddr, blockNumber, txHash, contractName, 0, owner, chain_symbol, Constants.sourceType.chain)
+                            await plaNFTDB.insertCollectionTransaction(collectionParams)
                         }
                     } catch (error) {
                         if (error.code === 'UNPREDICTABLE_GAS_LIMIT' || error.code === 'CALL_EXCEPTION') {

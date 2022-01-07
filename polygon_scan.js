@@ -1,16 +1,25 @@
-const scanTask = require("./service/scan/scanTask");
+const erc721Transfer = require("./service/scan/erc721Transfer");
 const Constants = require("./config/constants");
 const chainConstants = Constants.POLYGON;
-const telegram = require('./service/network/telegram')
 const eth = require("./utils/eth");
+const telegram = require('./service/network/telegram')
+const { contractInfo } = require('./service/db/plaNFT');
+const schedule = require('node-schedule');
 
 async function startScan() {
-  try {
-    const provider = await eth.getProvider(chainConstants.network);
-    await scanTask.startScan(provider, chainConstants.chain_symbol, 0);
-  } catch (error) {
-    telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " scanTask error", error.toString())
-  }
+
+  // Scan every ten seconds
+  schedule.scheduleJob('*/10 * * * * *', async () => {
+    try {
+      const provider = await eth.getProvider(chainConstants.network);
+      const transferList = await contractInfo.getTransferList(chainConstants.chain_symbol);
+      if (transferList.length !== 0) {
+        erc721Transfer.startScan(provider, transferList, chainConstants.chain_symbol);
+      }
+    } catch (error) {
+      telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " transferList error", error.toString())
+    }
+  });
 }
 
 startScan();

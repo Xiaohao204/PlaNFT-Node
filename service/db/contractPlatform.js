@@ -8,8 +8,7 @@ contractPlatform.getSetTokenURIList = function (params) {
             const sql = "SELECT address from contract_platform where chain_symbol=? order by end_block_id";
             connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
-                result = result.map(obj => obj.address);
-                resolve(result);
+                result.length === 0 ? resolve(result) : resolve(result.map(obj => obj.address))
             });
             connection.release();
         })
