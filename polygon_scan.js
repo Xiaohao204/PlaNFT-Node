@@ -1,5 +1,6 @@
 const scanTask = require("./service/scan/scanTask");
-const chainConstants = require("./config/constants").POLYGON;
+const Constants = require("./config/constants");
+const chainConstants = Constants.POLYGON;
 const telegram = require('./service/network/telegram')
 const eth = require("./utils/eth");
 

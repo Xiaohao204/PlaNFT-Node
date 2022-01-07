@@ -1,5 +1,6 @@
 const subscribe = require("./service/scan/subscribe");
-const chainConstants = require("./config/constants").POLYGON;
+const Constants = require("./config/constants");
+const chainConstants = Constants.POLYGON;
 const telegram = require('./service/network/telegram')
 const eth = require("./utils/eth");
 
