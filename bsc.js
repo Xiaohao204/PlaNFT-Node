@@ -2,6 +2,7 @@ const subscribe = require("./service/scan/subscribe");
 const scanTask = require("./service/scan/scanTask");
 const chainConstants = require("./config/constants").BSC;
 const eth = require("./utils/eth");
+const interfaceId_erc721 = '0x80ac58cd';
 
 async function startScan() {
   try {

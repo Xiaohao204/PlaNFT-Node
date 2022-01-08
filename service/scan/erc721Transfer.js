@@ -38,7 +38,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                         if (eventBlockNumber > nftInfoDetails.end_block_id) {
                             toAddr === ethers.constants.AddressZero
                                 ? await plaNFTDB.deleteTransaction(nftInfoDetails, updateParams)
-                                : await plaNFTDB.updateTransaction(nftInfoDetails, updateParams);;
+                                : await plaNFTDB.updateTransaction(nftInfoDetails, updateParams);
                         }
                     } else {
                         if (toAddr !== ethers.constants.AddressZero) {
