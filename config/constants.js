@@ -14,6 +14,13 @@ module.exports = {
         // network: "https://planft:Planft20211231@apis.ankr.com/8e2edc9e5f9f494287e7aab41f22458a/46d7ea6c80dc52f7d19bf60d4c4158c9/polygon/full/main",
         network: "https://polygon-rpc.com/",
         chain_symbol: 'POLYGON',
+        contractList: [
+            '0xC3465ef696871992EdF62499c822f1Ee72CC22b3',
+            '0x7D863CDB5dcb3a4C9B5E1d22efAAFD2086ADFB66',
+            '0x1DFAB6Ff57f4FBaA240E6307E73De38D92aB4371',
+            '0x59f76E0D2ee1c6f5bf0A7dFb18f7f4A05f9ED0f5',
+            '0xF5a3e744526cE022EE899e110993b9BAC07A0086'
+        ]
     },
     ARBITRUM: {
         // network: "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/arbitrum/testnet",

@@ -33,12 +33,12 @@ const deleteTransaction = function (nftInfoDetails, deleteParams) {
     });
 }
 
-const updateTransaction = function (nftInfoDetails, updateParams) {
+const updateTransaction = function (nftInfoDetails, updateParams, contractList) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
             try {
                 connection.beginTransaction();
-                nftInfo.updateNFTInfo(connection, updateParams, nftInfoDetails);
+                nftInfo.updateNFTInfo(connection, updateParams, nftInfoDetails, contractList);
                 salesInfo.updateSaleInfo(connection, nftInfoDetails, updateParams);
                 listing.delListing(connection, nftInfoDetails);
                 offer.delOffer(connection, nftInfoDetails, updateParams);

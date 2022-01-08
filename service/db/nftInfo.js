@@ -1,6 +1,5 @@
 const mysql = require('../../config/mysql');
 const telegram = require('../network/telegram')
-
 const nftInfo = {}
 
 nftInfo.deleteNFTInfo = function (connection, params) {
@@ -13,12 +12,12 @@ nftInfo.deleteNFTInfo = function (connection, params) {
     })
 }
 
-nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails) {
+nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails, contractList) {
     return new Promise(function (resolve, reject) {
         const sql = 'UPDATE nft_info SET end_block_id=?,user_address = ? WHERE contract_address = ? and token_id =? and chain_symbol=?';
-        connection.query(sql, [params.blockNumber, params.toAddr, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
+        connection.query(sql, [params.eventBlockNumber, params.toAddr, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
             if (err) reject(err);
-            telegram.changeOwnerNews(params, nftInfoDetails)
+            if (contractList.includes(params.contractAddr)) telegram.changeOwnerNews(params, nftInfoDetails)
             resolve(result);
         });
     })
@@ -27,8 +26,8 @@ nftInfo.updateNFTInfo = function (connection, params, nftInfoDetails) {
 nftInfo.updateNFTInfoBySetTokenURI = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,title=?,token_uri=?,is_frozen=?,metadata=? WHERE contract_address = ? and token_id =? and chain_symbol=?';
-            connection.query(sql, [params.description, params.properties, params.imageUrl, params.title, params.tokenURI, params.is_frozen, params.data, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
+            const sql = 'UPDATE nft_info SET description = ?,properties=?,image_url=?,animation_url=?,title=?,token_uri=?,is_frozen=? WHERE contract_address = ? and token_id =? and chain_symbol=?';
+            connection.query(sql, [params.description, params.properties, params.imageUrl, params.animationUrl, params.title, params.tokenURI, params.is_frozen, params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
                 if (err) reject(err);
                 resolve(result);
             });

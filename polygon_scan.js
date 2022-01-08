@@ -14,7 +14,7 @@ async function startScan() {
       const provider = await eth.getProvider(chainConstants.network);
       const transferList = await contractInfo.getTransferList(chainConstants.chain_symbol);
       if (transferList.length !== 0) {
-        erc721Transfer.startScan(provider, transferList, chainConstants.chain_symbol);
+        erc721Transfer.startScan(provider, transferList, chainConstants);
       }
     } catch (error) {
       telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " transferList error", error.toString())

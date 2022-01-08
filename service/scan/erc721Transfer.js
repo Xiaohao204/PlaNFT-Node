@@ -10,12 +10,14 @@ const eventFilter = {
 
 const erc721Transfer = {}
 
-erc721Transfer.startScan = async function (provider, contractAddressList, chain_symbol) {
+erc721Transfer.startScan = async function (provider, contractAddressList, chainConstants) {
     const chainBlockNumber = await provider.getBlockNumber();
-    scanTransfer(contractAddressList, chainBlockNumber, chain_symbol);
+    scanTransfer(contractAddressList, chainBlockNumber, chainConstants);
 };
 
-async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol) {
+async function scanTransfer(contractAddressList, chainBlockNumber, chainConstants) {
+    const chain_symbol = chainConstants.chain_symbol;
+    const contractList = chainConstants.contractList;
     contractAddressList.map(async (contractAddr) => {
         try {
             const contract = await eth.instanceContracts(contractAddr);
@@ -38,7 +40,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chain_symbol)
                         if (eventBlockNumber > nftInfoDetails.end_block_id) {
                             toAddr === ethers.constants.AddressZero
                                 ? await plaNFTDB.deleteTransaction(nftInfoDetails, updateParams)
-                                : await plaNFTDB.updateTransaction(nftInfoDetails, updateParams);
+                                : await plaNFTDB.updateTransaction(nftInfoDetails, updateParams, contractList);
                         }
                     } else {
                         if (toAddr !== ethers.constants.AddressZero) {
