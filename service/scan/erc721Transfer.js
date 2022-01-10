@@ -12,13 +12,13 @@ const erc721Transfer = {}
 
 erc721Transfer.startScan = async function (provider, contractAddressList, chainConstants) {
     const chainBlockNumber = await provider.getBlockNumber();
-    scanTransfer(contractAddressList, chainBlockNumber, chainConstants);
+    await scanTransfer(contractAddressList, chainBlockNumber, chainConstants);
 };
 
 async function scanTransfer(contractAddressList, chainBlockNumber, chainConstants) {
     const chain_symbol = chainConstants.chain_symbol;
     const contractList = chainConstants.contractList;
-    contractAddressList.map(async (contractAddr) => {
+    await Promise.all(contractAddressList.map(async (contractAddr) => {
         try {
             const contract = await eth.instanceContracts(contractAddr);
             // calc scan scope
@@ -104,9 +104,11 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
             await plaNFTDB.contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
             console.log('Transfer %s %s %d %d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
-            telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' listen transfer error', error.toString())
+            if (!error.toString().startsWith('Error: Invalid JSON RPC response')) {
+                telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' listen transfer error', error.toString())
+            }
         }
-    });
+    }))
 }
 
 module.exports = erc721Transfer;
