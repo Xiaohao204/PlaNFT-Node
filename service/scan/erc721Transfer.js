@@ -104,9 +104,9 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
             await plaNFTDB.contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
             console.log('Transfer %s %s %d %d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
-            if (!error.toString().startsWith('Error: Invalid JSON RPC response')) {
-                telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' listen transfer error', error.toString())
-            }
+            // if (!error.toString().startsWith('Error: Invalid JSON RPC response')) {
+                // telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' listen transfer error', error.toString())
+            // }
         }
     }))
 }
