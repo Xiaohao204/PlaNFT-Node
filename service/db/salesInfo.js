@@ -22,8 +22,8 @@ salesInfo.updateSaleInfo = function (connection, nftInfoDetails, params) {
 
 salesInfo.insertSaleInfo = async (connection, params) => {
     return new Promise(function (resolve, reject) {
-        const sql = 'INSERT into sales_info (user_Address,type,status,is_bundle,last_traded,chain_symbol) Values (?,?,0,0,now(),?)';
-        connection.query(sql, [params.toAddr, params.type, params.chain_symbol], function (err, result) {
+        const sql = 'INSERT into sales_info (user_Address,type,status,is_bundle,last_traded,chain_symbol,collection_id) Values (?,?,0,0,now(),?,?)';
+        connection.query(sql, [params.toAddr, params.type, params.chain_symbol,params.collection_id], function (err, result) {
             connection.query("SELECT LAST_INSERT_ID();", function (err, data) {
                 if (err) reject(err);
                 resolve(data[0]['LAST_INSERT_ID()']);
