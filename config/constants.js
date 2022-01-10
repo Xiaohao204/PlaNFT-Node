@@ -4,6 +4,9 @@ module.exports = {
         network: "http://10.0.0.89:18545/",
         // network: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
         chain_symbol: 'ETH',
+        contractList: [
+
+        ]
     },
     BSC: {
         // network: "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/bsc/testnet",
