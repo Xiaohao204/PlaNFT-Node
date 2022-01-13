@@ -1,9 +1,9 @@
-const plaNFtSetTokenURI = require("./service/scan/plaNFtSetTokenURI");
-const Constants = require("./config/constants");
-const chainConstants = Constants.ETH;
-const eth = require("./utils/eth");
-const telegram = require('./service/network/telegram')
-const { contractPlatform } = require('./service/db/plaNFT');
+const plaNFtSetTokenURI = require("../../service/scan/plaNFtSetTokenURI");
+const Constants = require("../../config/constants");
+const chainConstants = Constants.AURORA;
+const eth = require("../../utils/eth");
+const telegram = require('../../service/network/telegram')
+const { contractPlatform } = require('../../service/db/plaNFT');
 const schedule = require('node-schedule');
 
 async function startScan() {

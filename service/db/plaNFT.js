@@ -25,7 +25,7 @@ const deleteTransaction = function (nftInfoDetails, deleteParams) {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('deleteTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -47,7 +47,7 @@ const updateTransaction = function (nftInfoDetails, updateParams, contractList) 
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('updateTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -65,7 +65,7 @@ const insertNftTransaction = async (nftInfoData) => {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('insertNftTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -83,7 +83,7 @@ const insertCollectionTransaction = async (insertParams) => {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('insertCollectionTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }

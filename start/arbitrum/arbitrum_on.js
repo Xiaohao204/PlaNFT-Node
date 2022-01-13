@@ -1,8 +1,8 @@
-const subscribe = require("./service/scan/subscribe");
-const Constants = require("./config/constants");
-const chainConstants = Constants.ETH;
-const telegram = require('./service/network/telegram')
-const eth = require("./utils/eth");
+const subscribe = require("../../service/scan/subscribe");
+const Constants = require("../../config/constants");
+const chainConstants = Constants.ARBITRUM;
+const telegram = require('../../service/network/telegram')
+const eth = require("../../utils/eth");
 
 async function startScan() {
   try {

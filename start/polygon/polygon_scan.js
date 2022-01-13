@@ -1,9 +1,9 @@
-const erc721Transfer = require("./service/scan/erc721Transfer");
-const Constants = require("./config/constants");
-const chainConstants = Constants.ETH;
-const eth = require("./utils/eth");
-const telegram = require('./service/network/telegram')
-const { contractInfo } = require('./service/db/plaNFT');
+const erc721Transfer = require("../../service/scan/erc721Transfer");
+const Constants = require("../../config/constants");
+const chainConstants = Constants.POLYGON;
+const eth = require("../../utils/eth");
+const telegram = require('../../service/network/telegram')
+const { contractInfo } = require('../../service/db/plaNFT');
 const schedule = require('node-schedule');
 
 async function startScan() {

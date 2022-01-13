@@ -1,49 +1,38 @@
 module.exports = {
     ETH: {
-        // network: "https://speedy-nodes-nyc.moralis.io/6bd8d0732c1d9c3760f1d506/eth/mainnet",
-        network: "http://10.0.0.89:18545/",
-        // network: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+        network: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
         chain_symbol: 'ETH',
-        contractList: [
-
-        ]
+        contractList: []
     },
     BSC: {
-        // network: "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/bsc/testnet",
-        network: "https://bsc-dataseed.binance.org/",
+        network: "https://data-seed-prebsc-1-s1.binance.org:8545/",
         chain_symbol: 'BSC',
+        contractList: []
     },
     POLYGON: {
-        // network: "https://planft:Planft20211231@apis.ankr.com/8e2edc9e5f9f494287e7aab41f22458a/46d7ea6c80dc52f7d19bf60d4c4158c9/polygon/full/main",
-        network: "https://polygon-rpc.com/",
+        network: "https://rpc-mumbai.maticvigil.com/",
         chain_symbol: 'POLYGON',
-        contractList: [
-            '0xC3465ef696871992EdF62499c822f1Ee72CC22b3',
-            '0x7D863CDB5dcb3a4C9B5E1d22efAAFD2086ADFB66',
-            '0x1DFAB6Ff57f4FBaA240E6307E73De38D92aB4371',
-            '0x59f76E0D2ee1c6f5bf0A7dFb18f7f4A05f9ED0f5',
-            '0xF5a3e744526cE022EE899e110993b9BAC07A0086'
-        ]
+        contractList: []
     },
     ARBITRUM: {
-        // network: "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/arbitrum/testnet",
-        network: "https://arb1.arbitrum.io/rpc",
+        network: "https://rinkeby.arbitrum.io/rpc",
         chain_symbol: 'ARBITRUM',
+        contractList: []
     },
     FANTOM: {
-        // network: "https://rpc.testnet.fantom.network/",
-        network: "https://rpc.ftm.tools/",
+        network: "https://rpc.testnet.fantom.network/",
         chain_symbol: 'FANTOM',
+        contractList: []
     },
     AVAX: {
-        // network: "https://speedy-nodes-nyc.moralis.io/cd647532dcdc3ae204954045/avalanche/testnet",
-        network: "https://api.avax.network/ext/bc/C/rpc",
+        network: "https://api.avax-test.network/ext/bc/C/rpc",
         chain_symbol: 'AVAX',
+        contractList: []
     },
     AURORA: {
-        // network: "https://testnet.aurora.dev",
-        network: "https://mainnet.aurora.dev",
+        network: "https://testnet.aurora.dev",
         chain_symbol: 'AURORA',
+        contractList: []
     },
     ipfs: {
         main: "https://ipfs.io/ipfs/",
@@ -62,6 +51,6 @@ module.exports = {
     max_scan: 50,
     telegram: {
         userName: 'BoHaos',
-        host: 'www.planft.com'
+        host: 'test.planft.com'
     }
 }
