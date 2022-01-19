@@ -23,7 +23,7 @@ async function startScan() {
   });
 
   // Scan every ten seconds
-  schedule.scheduleJob('*/10 * * * * *', async () => {
+  schedule.scheduleJob('*/5 * * * * *', async () => {
     try {
       const provider = await eth.getProvider(chainConstants.network);
       const exchangeList = await plaNFT.contractTrade.getContractList([chainConstants.chain_symbol, 1]);

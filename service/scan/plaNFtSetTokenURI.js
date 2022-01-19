@@ -31,8 +31,8 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
                     const tokenId = value.args['tokenId'].toString();
                     const tokenURI = value.args['tokenURI'];
                     if (tokenURI !== '') {
-                        const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
-                        // const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
+                        // const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
+                        const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
                         ipfs.getMetaData(url, async (err, data) => {
                             if (err === null) {
                                 try {

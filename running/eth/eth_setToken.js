@@ -1,7 +1,7 @@
 const plaNFtSetTokenURI = require("../../service/scan/plaNFtSetTokenURI");
 const plaExchangeMatch = require("../../service/scan/plaExchangeMatch");
 const Constants = require("../../config/constants");
-const chainConstants = Constants.BSC;
+const chainConstants = Constants.ETH;
 const eth = require("../../utils/eth");
 const telegram = require('../../service/network/telegram')
 const plaNFT = require('../../service/db/plaNFT');
@@ -23,7 +23,7 @@ async function startScan() {
   });
 
   // Scan every ten seconds
-  schedule.scheduleJob('*/10 * * * * *', async () => {
+  schedule.scheduleJob('*/5 * * * * *', async () => {
     try {
       const provider = await eth.getProvider(chainConstants.network);
       const exchangeList = await plaNFT.contractTrade.getContractList([chainConstants.chain_symbol, 1]);

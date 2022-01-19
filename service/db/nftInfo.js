@@ -50,10 +50,36 @@ nftInfo.insertNFTInfo = function (connection, params) {
 nftInfo.getNFTInfoDetails = async (params) => {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT id,sales_id,user_address,end_block_id from nft_info where contract_address = ? and token_id =? and chain_symbol=?";
+            const sql = "SELECT id,sales_id,bundle_id,user_address,end_block_id from nft_info where contract_address = ? and token_id =? and chain_symbol=?";
             connection.query(sql, [params.contractAddr, params.tokenId, params.chain_symbol], function (err, result) {
                 if (err) reject(err);
                 resolve(result.length === 0 ? null : result[0]);
+            });
+            connection.release();
+        })
+    })
+}
+
+nftInfo.getBundleCount = async (params) => {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(function (err, connection) {
+            const sql = "SELECT count(*) as count from nft_info WHERE bundle_id=?";
+            connection.query(sql, params.bundle_id, function (err, result) {
+                if (err) reject(err);
+                resolve(result[0].count);
+            });
+            connection.release();
+        })
+    })
+}
+
+nftInfo.updateBundleId = async (params) => {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(function (err, connection) {
+            const sql = "UPDATE nft_info SET bundle_id=NULL WHERE id=?";
+            connection.query(sql, params.id, function (err, result) {
+                if (err) reject(err);
+                resolve(result);
             });
             connection.release();
         })

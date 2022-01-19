@@ -65,8 +65,8 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
                             try {
                                 let tokenURI = await contract.tokenURI(tokenId);
                                 if (tokenURI !== '') {
-                                    const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
-                                    // const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
+                                    // const url = tokenURI.replace("ipfs://", Constants.ipfs.main).trim();
+                                    const url = tokenURI.replace("ipfs://", Constants.ipfs.test).trim();
                                     ipfs.getMetaData(url, async (err, data) => {
                                         if (err === null) {
                                             let metadata = null;
@@ -76,6 +76,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
                                                 try {
                                                     metadata = JSON.parse(data.body);
                                                 } catch (error) {
+                                                    console.log('=======', error)
                                                 }
                                             }
                                             if (metadata != null) {

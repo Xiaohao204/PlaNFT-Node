@@ -2,8 +2,18 @@ const salesInfo = {}
 
 salesInfo.deleteSaleInfo = function (connection, nftInfoDetails, params) {
     return new Promise(function (resolve, reject) {
-        const sql = 'delete from sales_info where id = ? and chain_symbol=?';
-        connection.query(sql, [nftInfoDetails.sales_id, params.chain_symbol], function (err, result) {
+        const sql = 'delete from sales_info where id = ?';
+        connection.query(sql, nftInfoDetails.sales_id, function (err, result) {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+salesInfo.deleteBundleInfo = function (connection, nftInfoDetails, params) {
+    return new Promise(function (resolve, reject) {
+        const sql = 'delete from sales_info where id = ?';
+        connection.query(sql, nftInfoDetails.bundle_id, function (err, result) {
             if (err) reject(err);
             resolve(result);
         });

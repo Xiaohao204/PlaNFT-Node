@@ -10,6 +10,7 @@ const offer = require('../db/offer');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 const illegalErc721 = require('../db/illegalErc721');
+const contractTrade = require('../db/contractTrade');
 
 const deleteTransaction = function (nftInfoDetails, deleteParams) {
     return new Promise(function (resolve, reject) {
@@ -91,6 +92,26 @@ const insertCollectionTransaction = async (insertParams) => {
     })
 }
 
+
+const updateBundleTransaction = async (nftInfoDetails, updateParams) => {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(async function (err, connection) {
+            try {
+                connection.beginTransaction();
+                await nftInfo.updateBundleId(nftInfoDetails);
+                await salesInfo.deleteBundleInfo(connection, nftInfoDetails, updateParams);
+                await listing.delBundleListing(connection, nftInfoDetails);
+                connection.commit();
+            } catch (error) {
+                connection.rollback();
+                reject(error)
+            } finally {
+                connection.release();
+            }
+        })
+    })
+}
+
 const plaNFTDB = {
     scanNumber,
     collection,
@@ -101,10 +122,12 @@ const plaNFTDB = {
     listing,
     offer,
     illegalErc721,
+    contractTrade,
     updateTransaction,
     insertNftTransaction,
     insertCollectionTransaction,
-    deleteTransaction
+    deleteTransaction,
+    updateBundleTransaction
 }
 
 
