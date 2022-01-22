@@ -82,6 +82,6 @@ module.exports = {
     max_scan: 50,
     telegram: {
         userName: 'BoHaos',
-        host: 'planft.com'
+        host: 'www.planft.com'
     }
 }
