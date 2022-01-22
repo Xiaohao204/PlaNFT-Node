@@ -31,7 +31,7 @@ contractInfo.getTransferList = function (params) {
             const sql = "SELECT address from contract_info where chain_symbol=? order by end_block_id";
             connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
-                resolve(result.length === 0 ? [] : resolve(result.map(obj => obj.address)))
+                resolve(result.length === 0 ? [] : result.map(obj => obj.address))
             });
             connection.release();
         })

@@ -10,6 +10,7 @@ const offer = require('../db/offer');
 const listingExpiration = require('../db/listingExpiration');
 const dutchAuctionSale = require('../db/dutchAuctionSale');
 const illegalErc721 = require('../db/illegalErc721');
+const contractTrade = require('../db/contractTrade');
 
 const deleteTransaction = function (nftInfoDetails, deleteParams) {
     return new Promise(function (resolve, reject) {
@@ -25,7 +26,7 @@ const deleteTransaction = function (nftInfoDetails, deleteParams) {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('deleteTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -47,7 +48,7 @@ const updateTransaction = function (nftInfoDetails, updateParams, contractList) 
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('updateTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -65,7 +66,7 @@ const insertNftTransaction = async (nftInfoData) => {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('insertNftTransaction:', error)
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -83,7 +84,27 @@ const insertCollectionTransaction = async (insertParams) => {
                 connection.commit();
             } catch (error) {
                 connection.rollback();
-                // console.log('insertCollectionTransaction:', error)
+                reject(error)
+            } finally {
+                connection.release();
+            }
+        })
+    })
+}
+
+
+const updateBundleTransaction = async (nftInfoDetails, updateParams) => {
+    return new Promise(function (resolve, reject) {
+        mysql.getConnection(async function (err, connection) {
+            try {
+                connection.beginTransaction();
+                await nftInfo.updateBundleId(nftInfoDetails);
+                await salesInfo.deleteBundleInfo(connection, nftInfoDetails, updateParams);
+                await listing.delBundleListing(connection, nftInfoDetails);
+                connection.commit();
+            } catch (error) {
+                connection.rollback();
+                reject(error)
             } finally {
                 connection.release();
             }
@@ -101,10 +122,12 @@ const plaNFTDB = {
     listing,
     offer,
     illegalErc721,
+    contractTrade,
     updateTransaction,
     insertNftTransaction,
     insertCollectionTransaction,
-    deleteTransaction
+    deleteTransaction,
+    updateBundleTransaction
 }
 
 

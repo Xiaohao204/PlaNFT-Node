@@ -1,24 +1,25 @@
 const mysql = require('../../config/mysql');
 
-const contractPlatform = {}
+const contractTrade = {}
 
-contractPlatform.getSetTokenURIList = function (params) {
+contractTrade.getContractList = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT address from contract_platform where chain_symbol=? order by end_block_id";
+            const sql = "Select address from contract_trade where chain_symbol = ? and type = ?";
             connection.query(sql, params, function (err, result) {
-                if (err) reject(err);
-                resolve(result.length === 0 ? [] : result.map(obj => obj.address))
+                if (err) throw err;
+                result = result.map(obj => obj.address);
+                resolve(result);
             });
             connection.release();
         })
     })
 }
 
-contractPlatform.getLastNumber = function (params) {
+contractTrade.getLastNumber = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "SELECT end_block_id from contract_platform where address=? and chain_symbol=?";
+            const sql = "SELECT end_block_id from contract_trade where address=? and chain_symbol=?";
             connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
                 resolve(result[0].end_block_id);
@@ -28,10 +29,10 @@ contractPlatform.getLastNumber = function (params) {
     })
 }
 
-contractPlatform.setLastNumber = function (params) {
+contractTrade.setLastNumber = function (params) {
     return new Promise(function (resolve, reject) {
         mysql.getConnection(function (err, connection) {
-            const sql = "UPDATE contract_platform set end_block_id= ? where address = ? and end_block_id = ? and chain_symbol=?";
+            const sql = "UPDATE contract_trade set end_block_id= ? where address = ? and end_block_id = ? and chain_symbol=?";
             connection.query(sql, params, function (err, result) {
                 if (err) reject(err);
                 resolve(result);
@@ -40,5 +41,6 @@ contractPlatform.setLastNumber = function (params) {
         })
     })
 }
-module.exports = contractPlatform
+
+module.exports = contractTrade
 

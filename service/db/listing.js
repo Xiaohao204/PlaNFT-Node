@@ -10,6 +10,17 @@ listing.delListing = function (connection, params) {
     })
 }
 
+listing.delBundleListing = function (connection, params) {
+    return new Promise(function (resolve, reject) {
+        const sql = 'delete from listing where sales_id = ?';
+        connection.query(sql, params.bundle_id, function (err, result) {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+
 module.exports = listing
 
 

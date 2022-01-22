@@ -2,8 +2,18 @@ const salesInfo = {}
 
 salesInfo.deleteSaleInfo = function (connection, nftInfoDetails, params) {
     return new Promise(function (resolve, reject) {
-        const sql = 'delete from sales_info where id = ? and chain_symbol=?';
-        connection.query(sql, [nftInfoDetails.sales_id, params.chain_symbol], function (err, result) {
+        const sql = 'delete from sales_info where id = ?';
+        connection.query(sql, nftInfoDetails.sales_id, function (err, result) {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+salesInfo.deleteBundleInfo = function (connection, nftInfoDetails, params) {
+    return new Promise(function (resolve, reject) {
+        const sql = 'delete from sales_info where id = ?';
+        connection.query(sql, nftInfoDetails.bundle_id, function (err, result) {
             if (err) reject(err);
             resolve(result);
         });
@@ -22,8 +32,9 @@ salesInfo.updateSaleInfo = function (connection, nftInfoDetails, params) {
 
 salesInfo.insertSaleInfo = async (connection, params) => {
     return new Promise(function (resolve, reject) {
-        const sql = 'INSERT into sales_info (user_Address,type,status,is_bundle,last_traded,chain_symbol,collection_id) Values (?,?,0,0,now(),?,?)';
-        connection.query(sql, [params.toAddr, params.type, params.chain_symbol,params.collection_id], function (err, result) {
+        const sql = 'INSERT into sales_info (user_Address,type,status,is_bundle,last_traded,chain_symbol,collection_id,token_id,title,collection_name) Values (?,?,0,0,now(),?,?,?,?,?)';
+        connection.query(sql, [params.toAddr, params.type, params.chain_symbol, params.collection_id, params.tokenId, params.title, params.contract_name], function (err, result) {
+            if (err) reject(err);
             connection.query("SELECT LAST_INSERT_ID();", function (err, data) {
                 if (err) reject(err);
                 resolve(data[0]['LAST_INSERT_ID()']);

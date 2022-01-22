@@ -59,7 +59,8 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
                                 is_frozen: 1,
                                 tokenURI: null,
                                 type: 3,
-                                chain_symbol
+                                chain_symbol,
+                                contract_name
                             }
                             try {
                                 let tokenURI = await contract.tokenURI(tokenId);
@@ -75,6 +76,7 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
                                                 try {
                                                     metadata = JSON.parse(data.body);
                                                 } catch (error) {
+                                                    console.log('=======', error)
                                                 }
                                             }
                                             if (metadata != null) {
@@ -98,14 +100,14 @@ async function scanTransfer(contractAddressList, chainBlockNumber, chainConstant
                         }
                     }
                 } catch (error) {
-                    telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' transfer parse error', error.toString())
+                    telegram.warningNews(Constants.telegram.userName, new Date() + ' ' + chain_symbol + ' transfer parse error', error.toString())
                 }
             }));
             await plaNFTDB.contractInfo.setLastNumber([endBlock, contractAddr, end_block_id, chain_symbol]);
-            console.log('Transfer %s %s %d %d success count:%d \n', chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
+            console.log('%s Transfer %s %s %d %d count:%d \n', new Date(), chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             if (!error.toString().startsWith('Error: Invalid JSON RPC response')) {
-                telegram.warningNews(Constants.telegram.userName, contractAddr + ' ' + chain_symbol + ' listen transfer error', error.toString())
+                telegram.warningNews(Constants.telegram.userName, new Date() + ' ' + chain_symbol + ' listen transfer error', error.toString())
             }
         }
     }))
