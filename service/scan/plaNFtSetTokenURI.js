@@ -66,7 +66,9 @@ async function scanSetTokenURI(contractAddressList, chainBlockNumber, chain_symb
             await plaNFTDB.contractPlatform.setLastNumber([endBlock, contractAddr, startBlock, chain_symbol]);
             console.log('%s SetTokenUri %s %s %d %d count:%d \n', new Date(), chain_symbol, contractAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
-            telegram.warningNews(Constants.telegram.userName, new Date() + ' ' + chain_symbol + ' scan setToken error', error.toString())
+            if (!error.toString().startsWith('Error: Invalid JSON RPC response') || error.toString() != 'Error') {
+                telegram.warningNews(Constants.telegram.userName, new Date() + ' ' + chain_symbol + ' scan setToken error', error.toString())
+            }
         }
     }));
 }
