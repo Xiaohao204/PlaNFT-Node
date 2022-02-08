@@ -1,5 +1,6 @@
 const plaNFtSetTokenURI = require("../../service/scan/plaNFtSetTokenURI");
 const plaExchangeMatch = require("../../service/scan/plaExchangeMatch");
+const plaExchangeStartTime = require("../../service/scan/plaExchangeStartTime");
 const Constants = require("../../config/constants");
 const chainConstants = Constants.AVAX;
 const eth = require("../../utils/eth");
@@ -18,22 +19,36 @@ async function startScan() {
         plaNFtSetTokenURI.startScan(provider, setTokenURIList, chainConstants.chain_symbol);
       }
     } catch (error) {
-      telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " setTokenURIList error", error.toString())
+      telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " scan setTokenURIList error", error.toString())
     }
   });
 
-  // Scan every ten seconds
+  // Scan batch match
   schedule.scheduleJob('*/5 * * * * *', async () => {
     try {
       const provider = await eth.getProvider(chainConstants.network);
-      const exchangeList = await plaNFT.contractTrade.getContractList([chainConstants.chain_symbol, 1]);
+      const exchangeList = await plaNFT.contractTrade.getContractList([chainConstants.chain_symbol, Constants.exchangeType.batchMatch]);
       if (exchangeList.length !== 0) {
-        plaExchangeMatch.startScan(provider, exchangeList, chainConstants.chain_symbol);
+        plaExchangeMatch.startScan(provider, exchangeList, chainConstants.chain_symbol, Constants.exchangeType.batchMatch);
       }
     } catch (error) {
-      telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " exchange match error", error.toString())
+      telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " scan exchange match error", error.toString())
     }
   });
+
+  // // Scan set start time
+  // // 删除所有过期订单
+  // schedule.scheduleJob('*/10 * * * * *', async () => {
+  //   try {
+  //     const provider = await eth.getProvider(chainConstants.network);
+  //     const exchangeList = await plaNFT.contractTrade.getContractList([chainConstants.chain_symbol, Constants.exchangeType.setStartTime]);
+  //     if (exchangeList.length !== 0) {
+  //       plaExchangeStartTime.startScan(provider, exchangeList, chainConstants.chain_symbol, Constants.exchangeType.setStartTime);
+  //     }
+  //   } catch (error) {
+  //     telegram.warningNews(Constants.telegram.userName, chainConstants.chain_symbol + " scan exchange setStartTime error", error.toString())
+  //   }
+  // });
 
 }
 

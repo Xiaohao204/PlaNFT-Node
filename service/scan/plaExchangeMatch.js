@@ -9,18 +9,18 @@ const eventFilter = {
 
 const plaExchangeMatch = {}
 
-plaExchangeMatch.startScan = async function (provider, contractAddressList, chain_symbol) {
+plaExchangeMatch.startScan = async function (provider, contractAddressList, chain_symbol, type) {
     const chainBlockNumber = await provider.getBlockNumber();
-    await scanAtomicMatch(contractAddressList, chainBlockNumber, chain_symbol);
+    await scanAtomicMatch(contractAddressList, chainBlockNumber, chain_symbol, type);
 };
 
-async function scanAtomicMatch(contractAddressList, chainBlockNumber, chain_symbol) {
+async function scanAtomicMatch(contractAddressList, chainBlockNumber, chain_symbol, type) {
     await Promise.all(contractAddressList.map(async (exchangeAddr) => {
         try {
             const contract = await eth.instanceExchangeContracts(exchangeAddr);
 
             // calc scan scope
-            const startBlock = await plaNFTDB.contractTrade.getLastNumber([exchangeAddr, chain_symbol]);
+            const startBlock = await plaNFTDB.contractTrade.getLastNumber([exchangeAddr, chain_symbol, type]);
             const endBlock = chainBlockNumber - startBlock > Constants.max_scan ? startBlock + Constants.max_scan : chainBlockNumber;
 
             // listening transfer event
@@ -48,7 +48,7 @@ async function scanAtomicMatch(contractAddressList, chainBlockNumber, chain_symb
                     telegram.warningNews(Constants.telegram.userName, new Date() + ' ' + chain_symbol + ' scan AtomicMatch error', error.toString())
                 }
             }));
-            await plaNFTDB.contractTrade.setLastNumber([endBlock, exchangeAddr, startBlock, chain_symbol]);
+            await plaNFTDB.contractTrade.setLastNumber([endBlock, exchangeAddr, startBlock, chain_symbol, type]);
             console.log('%s AtomicMatch %s %s %d %d count:%d \n', new Date(), chain_symbol, exchangeAddr, startBlock, endBlock, scanResult.length);
         } catch (error) {
             if (!error.toString().startsWith('Error: Invalid JSON RPC response') && error.toString() != 'Error') {

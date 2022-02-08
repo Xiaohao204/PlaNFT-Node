@@ -72,12 +72,17 @@ module.exports = {
             SetTokenURI: "0xd2d827dddfc9c9a02afc5fc68d3251684b36e213a7999ebd90a861f25df4077e"
         },
         Exchange: {
-            AtomicMatch: "0x83517c79fd30b597c1e067b1580b3888ee68d8bcceac8273414d1c741ce3e2a2"
+            AtomicMatch: "0x83517c79fd30b597c1e067b1580b3888ee68d8bcceac8273414d1c741ce3e2a2",
+            SetStartTime: ""
         }
     },
     sourceType: {
         chain: 0,
         database: 1
+    },
+    exchangeType: {
+        batchMatch: 1,
+        setStartTime: 2
     },
     max_scan: 50,
     telegram: {
